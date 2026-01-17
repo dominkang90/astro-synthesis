@@ -1,0 +1,126 @@
+/* ===== Button System ===== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--border-radius-xl);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* Primary Button - Apple Blue */
+.btn-primary {
+    background: var(--apple-blue);
+    color: var(--apple-white);
+}
+
+.btn-primary:hover {
+    background: var(--apple-blue-hover);
+    transform: scale(1.02);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* Secondary Button - Outlined */
+.btn-secondary {
+    background: transparent;
+    color: var(--apple-blue);
+    border: 1px solid var(--apple-blue);
+}
+
+.btn-secondary:hover {
+    background: var(--apple-blue);
+    color: var(--apple-white);
+}
+
+/* Ghost Button */
+.btn-ghost {
+    background: transparent;
+    color: var(--apple-blue);
+}
+
+.btn-ghost:hover {
+    background: rgba(0, 113, 227, 0.1);
+}
+
+/* Button Sizes */
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+.btn-lg {
+    padding: 16px 32px;
+    font-size: 18px;
+}
+
+/* Button Group */
+.btn-group {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+/* Icon Button */
+.btn-icon {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--apple-light-gray);
+    color: var(--apple-dark-gray);
+}
+
+.btn-icon:hover {
+    background: var(--apple-gray);
+    color: var(--apple-white);
+}
+
+/* Analysis Type Buttons (for Astrology tabs) */
+.analysis-btn {
+    padding: 10px 20px;
+    background: var(--apple-light-gray);
+    color: var(--apple-dark-gray);
+    border-radius: var(--border-radius-md);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-fast);
+}
+
+.analysis-btn:hover {
+    background: var(--apple-gray);
+    color: var(--apple-white);
+}
+
+.analysis-btn.active {
+    background: var(--apple-blue);
+    color: var(--apple-white);
+}
+
+/* Element Buttons (오행) */
+.element-btn {
+    padding: 8px 16px;
+    border-radius: var(--border-radius-sm);
+    font-size: 14px;
+    font-weight: var(--font-weight-medium);
+}
+
+.element-btn.wood { background: rgba(52, 199, 89, 0.15); color: var(--element-wood); }
+.element-btn.fire { background: rgba(255, 59, 48, 0.15); color: var(--element-fire); }
+.element-btn.earth { background: rgba(255, 149, 0, 0.15); color: var(--element-earth); }
+.element-btn.metal { background: rgba(142, 142, 147, 0.15); color: var(--element-metal); }
+.element-btn.water { background: rgba(0, 122, 255, 0.15); color: var(--element-water); }
+
+/* Disabled State */
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}

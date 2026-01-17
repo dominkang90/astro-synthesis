@@ -1,0 +1,2498 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astro-Synthesis | AI 통합 역학 플랫폼</title>
+
+    <style>
+        /* ===== Reset CSS ===== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            line-height: 1.5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul, ol {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        button, input, textarea, select {
+            font: inherit;
+            border: none;
+            outline: none;
+            background: none;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* ===== Variables CSS ===== */
+        :root {
+            /* Apple Colors */
+            --apple-blue: #0071e3;
+            --apple-blue-hover: #0077ed;
+            --apple-gray: #86868b;
+            --apple-dark-gray: #1d1d1f;
+            --apple-light-gray: #f5f5f7;
+            --apple-white: #ffffff;
+            --apple-black: #000000;
+
+            /* Semantic Colors */
+            --status-good: #34c759;
+            --status-bad: #ff3b30;
+            --status-warning: #ff9500;
+            --chart-bg: var(--apple-light-gray);
+
+            /* Typography Scale */
+            --font-size-hero: 56px;
+            --font-size-h1: 48px;
+            --font-size-h2: 40px;
+            --font-size-h3: 28px;
+            --font-size-h4: 24px;
+            --font-size-body: 17px;
+            --font-size-caption: 12px;
+
+            /* Font Weights */
+            --font-weight-regular: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+
+            /* Spacing */
+            --spacing-xs: 8px;
+            --spacing-sm: 16px;
+            --spacing-md: 24px;
+            --spacing-lg: 40px;
+            --spacing-xl: 80px;
+
+            /* Border Radius */
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 18px;
+            --border-radius-xl: 24px;
+
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+
+            /* Transitions */
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+
+            /* Container */
+            --container-width: 1200px;
+
+            /* Theme Colors (Light - Default) */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f7;
+            --bg-card: #ffffff;
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --border-color: #d2d2d7;
+            --header-bg: rgba(255, 255, 255, 0.8);
+        }
+
+        /* ===== Dark Mode (Cosmic Theme) ===== */
+        [data-theme="dark"] {
+            --apple-blue: #5ac8fa;
+            --apple-blue-hover: #70d7ff;
+            --apple-gray: #98989d;
+            --apple-dark-gray: #f5f5f7;
+            --apple-light-gray: #1c1c1e;
+            --apple-white: #1c1c1e;
+            --apple-black: #ffffff;
+
+            --bg-primary: #000000;
+            --bg-secondary: #0d1117;
+            --bg-card: #161b22;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --header-bg: rgba(13, 17, 23, 0.9);
+
+            --chart-bg: #161b22;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+
+            /* Cosmic Gold Accent */
+            --cosmic-gold: #ffd700;
+            --cosmic-purple: #9d4edd;
+            --cosmic-blue: #0d47a1;
+        }
+
+        [data-theme="dark"] body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .header {
+            background: var(--header-bg);
+            border-bottom-color: var(--border-color);
+        }
+
+        [data-theme="dark"] .bento-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .section-light {
+            background: var(--bg-secondary);
+        }
+
+        [data-theme="dark"] .hero-text,
+        [data-theme="dark"] .h1,
+        [data-theme="dark"] .h2,
+        [data-theme="dark"] .h3,
+        [data-theme="dark"] .h4 {
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .subtitle,
+        [data-theme="dark"] .caption {
+            color: var(--text-secondary);
+        }
+
+        [data-theme="dark"] .body-text {
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .nav-link {
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .form-input {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .form-input:focus {
+            border-color: var(--apple-blue);
+        }
+
+        [data-theme="dark"] .form-label {
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .pillar-card,
+        [data-theme="dark"] .chart-placeholder {
+            background: var(--bg-secondary) !important;
+        }
+
+        [data-theme="dark"] .footer {
+            background: #000000;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-primary);
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background: var(--bg-card);
+        }
+
+        /* ===== Typography CSS ===== */
+        .hero-text {
+            font-size: var(--font-size-hero);
+            font-weight: var(--font-weight-bold);
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            color: var(--apple-dark-gray);
+        }
+
+        .h1 { font-size: var(--font-size-h1); font-weight: var(--font-weight-bold); line-height: 1.1; }
+        .h2 { font-size: var(--font-size-h2); font-weight: var(--font-weight-semibold); line-height: 1.2; }
+        .h3 { font-size: var(--font-size-h3); font-weight: var(--font-weight-semibold); line-height: 1.3; }
+        .h4 { font-size: var(--font-size-h4); font-weight: var(--font-weight-medium); line-height: 1.3; }
+
+        .subtitle {
+            font-size: 21px;
+            font-weight: var(--font-weight-regular);
+            line-height: 1.5;
+            color: var(--apple-gray);
+        }
+
+        .body-text {
+            font-size: var(--font-size-body);
+            font-weight: var(--font-weight-regular);
+            line-height: 1.6;
+            color: var(--apple-dark-gray);
+        }
+
+        .caption {
+            font-size: var(--font-size-caption);
+            font-weight: var(--font-weight-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--apple-gray);
+        }
+
+        /* ===== Button CSS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            font-size: var(--font-size-body);
+            font-weight: var(--font-weight-medium);
+            border-radius: var(--border-radius-xl);
+            transition: var(--transition-normal);
+        }
+
+        .btn-primary {
+            background: var(--apple-blue);
+            color: var(--apple-white);
+        }
+
+        .btn-primary:hover {
+            background: var(--apple-blue-hover);
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--apple-blue);
+            border: 1px solid var(--apple-blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--apple-blue);
+            color: var(--apple-white);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+
+        .link-arrow {
+            color: var(--apple-blue);
+            font-size: var(--font-size-body);
+            font-weight: var(--font-weight-medium);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition-fast);
+        }
+
+        .link-arrow::after {
+            content: '>';
+            font-size: 14px;
+        }
+
+        .link-arrow:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== Layout CSS ===== */
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-xl) 0;
+        }
+
+        .section-light {
+            background: var(--apple-light-gray);
+            min-height: auto;
+            padding: var(--spacing-xl) 0;
+        }
+
+        .section-dark {
+            background: var(--apple-dark-gray);
+            color: var(--apple-white);
+        }
+
+        .section-content {
+            max-width: var(--container-width);
+            padding: 0 var(--spacing-md);
+            text-align: center;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+        }
+
+        /* ===== Header CSS ===== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .nav {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: var(--spacing-sm) var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-list {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .nav-link {
+            font-size: 14px;
+            font-weight: var(--font-weight-medium);
+            color: var(--apple-dark-gray);
+            transition: var(--transition-fast);
+        }
+
+        .nav-link:hover {
+            color: var(--apple-blue);
+        }
+
+        /* ===== Bento Grid CSS ===== */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            max-width: var(--container-width);
+            margin: 0 auto;
+        }
+
+        .bento-card {
+            background: var(--apple-white);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-normal);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bento-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: scale(1.01);
+        }
+
+        .chart-container {
+            grid-column: span 12;
+        }
+
+        .insight-container {
+            grid-column: span 12;
+        }
+
+        .full-width {
+            grid-column: span 12;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container { grid-column: span 8; }
+            .insight-container { grid-column: span 4; }
+        }
+
+        /* ===== Animation CSS ===== */
+        .fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .scroll-fade {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .scroll-fade.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hover-scale {
+            transition: transform var(--transition-normal);
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+
+        /* ===== Form Elements ===== */
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: var(--font-weight-medium);
+            color: var(--apple-dark-gray);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: var(--font-size-body);
+            border: 1px solid #d2d2d7;
+            border-radius: var(--border-radius-sm);
+            background: var(--apple-white);
+            transition: var(--transition-fast);
+        }
+
+        .form-input:focus {
+            border-color: var(--apple-blue);
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-xs);
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            accent-color: var(--apple-blue);
+        }
+
+        /* ===== Chart Placeholder ===== */
+        .chart-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #e5e5ea 0%, #f5f5f7 100%);
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--apple-gray);
+            font-size: 14px;
+        }
+
+        /* ===== Footer CSS ===== */
+        .footer {
+            background: var(--apple-dark-gray);
+            color: var(--apple-white);
+            padding: var(--spacing-xl) 0;
+        }
+
+        .footer .nav-link {
+            color: var(--apple-gray);
+        }
+
+        .footer .nav-link:hover {
+            color: var(--apple-white);
+        }
+
+        .disclaimer {
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 11px;
+            color: var(--apple-gray);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ===== Relation Item Style ===== */
+        .relation-item {
+            padding: 8px 12px;
+            background: rgba(52, 199, 89, 0.1);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--status-good);
+        }
+
+        .relation-item.bad {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--status-bad);
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            :root {
+                --font-size-hero: 36px;
+                --font-size-h1: 32px;
+                --font-size-h2: 28px;
+                --font-size-h3: 22px;
+            }
+
+            .nav-list {
+                gap: var(--spacing-sm);
+            }
+
+            .nav-link {
+                font-size: 12px;
+            }
+
+            .section {
+                min-height: auto;
+                padding: var(--spacing-xl) 0;
+            }
+
+            .bento-grid {
+                gap: var(--spacing-sm);
+                padding: var(--spacing-sm);
+            }
+
+            .bento-card {
+                padding: var(--spacing-md);
+            }
+
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header (Glassmorphism) -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-list">
+                <span style="font-weight: 600; font-size: 18px;">Astro-Synthesis</span>
+            </div>
+            <div class="nav-list">
+                <a href="#analysis" class="nav-link">통합 분석</a>
+                <a href="#features" class="nav-link">기능</a>
+                <a href="#" class="nav-link">API 문서</a>
+                <!-- Theme Toggle -->
+                <button class="theme-toggle" id="themeToggle" title="테마 변경">
+                    <svg class="sun-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+                <a href="#" class="btn btn-primary" style="padding: 8px 16px; font-size: 14px;">시작하기</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="section scroll-fade visible" style="padding-top: 120px;">
+        <div class="section-content">
+            <h1 class="hero-text">당신의 운명,<br>데이터로 증명되다.</h1>
+            <p class="subtitle" style="margin-top: 24px;">
+                Swiss Ephemeris의 천문학적 정밀함과 AHP 알고리즘의 논리.<br>
+                동서양 역학이 통합된 가장 진보된 인텔리전스.
+            </p>
+            <div class="btn-group" style="margin-top: 48px; justify-content: center;">
+                <button class="btn btn-primary">무료 분석 시작하기</button>
+                <button class="btn btn-secondary">기술 백서 보기</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Input Form Section -->
+    <section id="analysis" class="section-light scroll-fade">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: var(--spacing-lg);">
+                <span class="caption">PERSONAL ANALYSIS</span>
+                <h2 class="h2" style="margin-top: 8px;">통합 분석 시작</h2>
+                <p class="subtitle" style="margin-top: 12px;">정확한 분석을 위해 출생 정보를 입력해주세요.</p>
+            </div>
+
+            <div class="bento-grid">
+                <!-- 입력 폼 카드 -->
+                <div class="bento-card" style="grid-column: span 12;">
+                    <form id="birthForm">
+                        <div class="grid-2col" style="gap: 24px;">
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">이름</label>
+                                    <input type="text" id="inputName" class="form-input" placeholder="홍길동">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">생년월일</label>
+                                    <input type="date" id="inputBirthDate" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">출생 시간</label>
+                                    <input type="time" id="inputBirthTime" class="form-input">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">출생 장소</label>
+                                    <input type="text" id="inputBirthPlace" class="form-input" placeholder="서울특별시">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">성별</label>
+                                    <select id="inputGender" class="form-input">
+                                        <option value="">선택해주세요</option>
+                                        <option value="male">남성</option>
+                                        <option value="female">여성</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">분석 유형</label>
+                                    <select id="inputAnalysisType" class="form-input">
+                                        <option value="integrated">통합 분석 (권장)</option>
+                                        <option value="western">서양 점성술</option>
+                                        <option value="eastern">동양 사주</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">계산 방식</label>
+                                    <select id="inputCalcMode" class="form-input">
+                                        <option value="local">로컬 (빠름)</option>
+                                        <option value="api">서버 API (정밀)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 32px; text-align: center;">
+                            <button type="submit" id="submitBtn" class="btn btn-primary" style="padding: 16px 48px;">분석 시작</button>
+                            <p id="apiStatus" class="caption" style="margin-top: 8px; color: var(--apple-gray);"></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Result Section (Bento Grid) -->
+    <section id="features" class="section-light scroll-fade" style="padding-top: 0;">
+        <div class="container">
+            <div class="bento-grid">
+
+                <!-- 통합 결론 카드 -->
+                <div class="bento-card insight-container fade-in" id="synthesisCard">
+                    <span class="caption">AI SYNTHESIS</span>
+                    <h2 class="h3" style="margin-top: 12px;" id="synthesisTitle">통합 분석 대기중</h2>
+                    <p class="body-text" style="margin-top: 16px; line-height: 1.8;" id="synthesisContent">
+                        출생 정보를 입력하면 동서양 역학을 통합한 분석 결과를 제공합니다.
+                    </p>
+                    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e5e5ea;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span class="caption">통합 점수</span>
+                            <span class="body-text" style="font-weight: 600;" id="synthesisScore">--</span>
+                        </div>
+                        <div style="background: #e5e5ea; height: 6px; border-radius: 3px; overflow: hidden;">
+                            <div id="synthesisBar" style="background: var(--apple-blue); width: 0%; height: 100%; transition: width 0.5s ease;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 12px;">
+                            <span class="caption">동양 사주</span>
+                            <span class="caption" id="easternWeight">50%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+                            <span class="caption">서양 점성술</span>
+                            <span class="caption" id="westernWeight">50%</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 24px;" id="synthesisGrade">
+                    </div>
+                </div>
+
+                <!-- 차트 영역 -->
+                <div class="bento-card chart-container hover-scale">
+                    <span class="caption">DUAL CHART SYSTEM</span>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+                        <!-- 서양 천궁도 -->
+                        <div>
+                            <p class="caption" style="text-align: center; margin-bottom: 8px;">Western Chart</p>
+                            <div id="astroChartContainer" class="chart-placeholder" style="min-height: 300px; display: flex; align-items: center; justify-content: center;">
+                                <div style="text-align: center; color: var(--apple-gray);">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <circle cx="12" cy="12" r="6"/>
+                                        <circle cx="12" cy="12" r="2"/>
+                                    </svg>
+                                    <p style="margin-top: 8px; font-size: 12px;">천궁도</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 동양 사주 차트 -->
+                        <div>
+                            <p class="caption" style="text-align: center; margin-bottom: 8px;">Eastern Chart</p>
+                            <div id="sajuChartContainer" class="chart-placeholder" style="min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                                <div style="text-align: center; color: var(--apple-gray);">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                        <line x1="12" y1="3" x2="12" y2="21"/>
+                                        <line x1="3" y1="12" x2="21" y2="12"/>
+                                    </svg>
+                                    <p style="margin-top: 8px; font-size: 12px;">사주팔자</p>
+                                </div>
+                            </div>
+                            <!-- 오행 차트 -->
+                            <div id="elementChartContainer" style="margin-top: 16px; display: flex; justify-content: center;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-2col" style="margin-top: 24px;">
+                        <div style="text-align: center; padding: 12px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm);">
+                            <h3 class="h4">Western</h3>
+                            <p class="caption" style="margin-top: 4px;">천문 계산 기반</p>
+                        </div>
+                        <div style="text-align: center; padding: 12px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm);">
+                            <h3 class="h4">Eastern</h3>
+                            <p class="caption" style="margin-top: 4px;">만세력 기반</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 서양 점성술 카드 -->
+                <div class="bento-card" style="grid-column: span 6;" id="astrologyCard">
+                    <span class="caption">WESTERN ASTROLOGY</span>
+                    <h3 class="h3" style="margin-top: 12px;">점성술 분석</h3>
+                    <div id="astrologyBasic" style="margin-top: 16px;">
+                        <div class="body-text" style="padding: 8px 0; border-bottom: 1px solid #e5e5ea; display: flex; justify-content: space-between;">
+                            <span><strong>태양</strong> ☉</span>
+                            <span id="astroSun">-</span>
+                        </div>
+                        <div class="body-text" style="padding: 8px 0; border-bottom: 1px solid #e5e5ea; display: flex; justify-content: space-between;">
+                            <span><strong>달</strong> ☽</span>
+                            <span id="astroMoon">-</span>
+                        </div>
+                        <div class="body-text" style="padding: 8px 0; border-bottom: 1px solid #e5e5ea; display: flex; justify-content: space-between;">
+                            <span><strong>어센던트</strong> ASC</span>
+                            <span id="astroAsc">-</span>
+                        </div>
+                        <div class="body-text" style="padding: 8px 0; display: flex; justify-content: space-between;">
+                            <span><strong>우세 원소</strong></span>
+                            <span id="astroDominant">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 동양 사주 카드 -->
+                <div class="bento-card" style="grid-column: span 6;" id="sajuCard">
+                    <span class="caption">EASTERN SAJU</span>
+                    <h3 class="h3" style="margin-top: 12px;">사주팔자</h3>
+                    <div id="sajuPillars" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; text-align: center;">
+                        <div class="pillar-card" style="background: var(--apple-light-gray); padding: 16px 8px; border-radius: var(--border-radius-sm);">
+                            <p class="caption">시주</p>
+                            <p class="h4 pillar-value" style="margin-top: 4px;" id="hourPillar">-</p>
+                            <p class="caption" style="margin-top: 4px; color: var(--apple-blue);" id="hourSipsin">-</p>
+                        </div>
+                        <div class="pillar-card" style="background: var(--apple-light-gray); padding: 16px 8px; border-radius: var(--border-radius-sm);">
+                            <p class="caption">일주</p>
+                            <p class="h4 pillar-value" style="margin-top: 4px;" id="dayPillar">-</p>
+                            <p class="caption" style="margin-top: 4px; color: var(--status-good);" id="daySipsin">일주</p>
+                        </div>
+                        <div class="pillar-card" style="background: var(--apple-light-gray); padding: 16px 8px; border-radius: var(--border-radius-sm);">
+                            <p class="caption">월주</p>
+                            <p class="h4 pillar-value" style="margin-top: 4px;" id="monthPillar">-</p>
+                            <p class="caption" style="margin-top: 4px; color: var(--apple-blue);" id="monthSipsin">-</p>
+                        </div>
+                        <div class="pillar-card" style="background: var(--apple-light-gray); padding: 16px 8px; border-radius: var(--border-radius-sm);">
+                            <p class="caption">년주</p>
+                            <p class="h4 pillar-value" style="margin-top: 4px;" id="yearPillar">-</p>
+                            <p class="caption" style="margin-top: 4px; color: var(--apple-blue);" id="yearSipsin">-</p>
+                        </div>
+                    </div>
+                    <div id="sajuSummary" style="margin-top: 16px;">
+                        <p class="body-text">
+                            <strong>용신</strong>: <span id="yongsinDisplay">-</span> | <strong>일간</strong>: <span id="dayMasterDisplay">-</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 대운 카드 -->
+                <div class="bento-card full-width" id="daeunCard" style="display: none;">
+                    <span class="caption">DAEUN (大運)</span>
+                    <h3 class="h3" style="margin-top: 12px;">대운 흐름</h3>
+                    <div id="daeunList" style="display: flex; gap: 12px; margin-top: 16px; overflow-x: auto; padding-bottom: 8px;">
+                        <!-- 대운 항목들이 여기에 동적으로 추가됨 -->
+                    </div>
+                </div>
+
+                <!-- 오행 분석 카드 -->
+                <div class="bento-card full-width" id="elementCard" style="display: none;">
+                    <span class="caption">FIVE ELEMENTS</span>
+                    <h3 class="h3" style="margin-top: 12px;">오행 분석</h3>
+                    <div id="elementChart" style="display: flex; gap: 16px; margin-top: 16px; align-items: flex-end; justify-content: center;">
+                        <!-- 오행 차트가 여기에 동적으로 추가됨 -->
+                    </div>
+                    <div id="elementSummary" style="margin-top: 16px; text-align: center;">
+                    </div>
+                </div>
+
+                <!-- 종합 점수 카드 -->
+                <div class="bento-card" id="scoreCard" style="grid-column: span 4; display: none;">
+                    <span class="caption">OVERALL SCORE</span>
+                    <div style="text-align: center; margin-top: 16px;">
+                        <div id="scoreGrade" style="font-size: 64px; font-weight: 700; color: var(--apple-blue);">-</div>
+                        <div id="scoreValue" style="font-size: 32px; font-weight: 600; margin-top: 8px;">-- 점</div>
+                        <p id="scoreDesc" class="body-text" style="margin-top: 12px; color: var(--apple-gray);">-</p>
+                    </div>
+                    <div id="scoreBreakdown" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e5e5ea;">
+                    </div>
+                </div>
+
+                <!-- 12신살 카드 -->
+                <div class="bento-card" id="sinsalCard" style="grid-column: span 8; display: none;">
+                    <span class="caption">12 SINSAL (十二神殺)</span>
+                    <h3 class="h3" style="margin-top: 12px;">12운성</h3>
+                    <div id="sinsalGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px;">
+                    </div>
+                    <p id="sinsalSummary" class="caption" style="margin-top: 16px; text-align: center;"></p>
+                </div>
+
+                <!-- 공망 카드 -->
+                <div class="bento-card" id="gongmangCard" style="grid-column: span 4; display: none;">
+                    <span class="caption">GONGMANG (空亡)</span>
+                    <h3 class="h3" style="margin-top: 12px;">공망</h3>
+                    <div id="gongmangDisplay" style="margin-top: 16px; text-align: center;">
+                    </div>
+                </div>
+
+                <!-- 합충 관계 카드 -->
+                <div class="bento-card" id="relationsCard" style="grid-column: span 8; display: none;">
+                    <span class="caption">RELATIONS (合沖)</span>
+                    <h3 class="h3" style="margin-top: 12px;">간지 관계</h3>
+                    <div id="relationsDisplay" style="margin-top: 16px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div id="goodRelations">
+                                <h4 class="h4" style="color: var(--status-good); margin-bottom: 8px;">합 (合)</h4>
+                                <div id="goodRelationsList"></div>
+                            </div>
+                            <div id="badRelations">
+                                <h4 class="h4" style="color: var(--status-bad); margin-bottom: 8px;">충/형/파/해</h4>
+                                <div id="badRelationsList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 세운 카드 -->
+                <div class="bento-card full-width" id="fortuneCard" style="display: none;">
+                    <span class="caption">YEARLY FORTUNE (歲運)</span>
+                    <h3 class="h3" style="margin-top: 12px;">향후 5년 운세</h3>
+                    <div id="fortuneList" style="display: flex; gap: 12px; margin-top: 16px; overflow-x: auto; padding-bottom: 8px;">
+                    </div>
+                </div>
+
+                <!-- 지장간 카드 -->
+                <div class="bento-card full-width" id="jijangganCard" style="display: none;">
+                    <span class="caption">JIJANGGAN (地藏干)</span>
+                    <h3 class="h3" style="margin-top: 12px;">지장간 분석</h3>
+                    <div id="jijangganDisplay" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 16px;">
+                    </div>
+                </div>
+
+                <!-- 행성 위치 카드 -->
+                <div class="bento-card full-width" id="planetsCard" style="display: none;">
+                    <span class="caption">PLANETARY POSITIONS</span>
+                    <h3 class="h3" style="margin-top: 12px;">행성 위치</h3>
+                    <div id="planetsGrid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 16px;">
+                    </div>
+                </div>
+
+                <!-- 어스펙트 카드 -->
+                <div class="bento-card full-width" id="aspectsCard" style="display: none;">
+                    <span class="caption">ASPECTS</span>
+                    <h3 class="h3" style="margin-top: 12px;">행성 간 각도 (어스펙트)</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 16px;">
+                        <div>
+                            <h4 class="h4" style="color: var(--status-good); margin-bottom: 12px;">긍정적 어스펙트</h4>
+                            <div id="positiveAspects"></div>
+                        </div>
+                        <div>
+                            <h4 class="h4" style="color: var(--status-bad); margin-bottom: 12px;">도전적 어스펙트</h4>
+                            <div id="challengingAspects"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI 관상 분석 카드 -->
+                <div class="bento-card full-width" id="physiognomyCard">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                        <div>
+                            <span class="caption">AI PHYSIOGNOMY</span>
+                            <h3 class="h3" style="margin-top: 8px;">AI 관상 분석</h3>
+                            <p class="body-text" style="margin-top: 8px; color: var(--apple-gray);">
+                                Google MediaPipe 기반 468개 3D 랜드마크 분석
+                            </p>
+                        </div>
+                        <div>
+                            <label class="checkbox-group">
+                                <input type="checkbox" id="biometricConsent">
+                                <span class="body-text" style="font-size: 14px;">
+                                    <strong>[필수]</strong> 민감정보(생체인식) 처리에 별도 동의합니다.
+                                    <br><span style="color: var(--apple-gray); font-size: 12px;">* 원본 사진은 분석 후 즉시 파기됩니다.</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 업로드 영역 -->
+                    <div id="uploadArea" style="margin-top: 24px; padding: 32px; border: 2px dashed #d2d2d7; border-radius: var(--border-radius-md); text-align: center; transition: var(--transition-normal); cursor: pointer;">
+                        <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--apple-gray)" stroke-width="1.5" style="margin: 0 auto;" id="uploadIcon">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <path d="M21 15l-5-5L5 21"/>
+                        </svg>
+                        <img id="previewImage" style="display: none; max-width: 300px; max-height: 300px; margin: 0 auto; border-radius: 12px;">
+                        <canvas id="faceCanvas" style="display: none;"></canvas>
+                        <p class="body-text" style="margin-top: 12px; color: var(--apple-gray);" id="uploadText">
+                            사진을 드래그하거나 클릭하여 업로드
+                        </p>
+                        <button class="btn btn-secondary" style="margin-top: 16px;" id="uploadBtn" disabled>사진 업로드</button>
+                        <button class="btn btn-primary" style="margin-top: 16px; display: none;" id="analyzeBtn">관상 분석 시작</button>
+                    </div>
+
+                    <!-- 분석 로딩 -->
+                    <div id="analysisLoading" style="display: none; text-align: center; padding: 40px;">
+                        <div style="width: 48px; height: 48px; border: 4px solid var(--apple-light-gray); border-top-color: var(--apple-blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                        <p class="body-text" style="margin-top: 16px; color: var(--apple-gray);">얼굴을 분석하고 있습니다...</p>
+                        <p class="caption" style="margin-top: 8px;">468개 랜드마크 추출 중</p>
+                    </div>
+
+                    <!-- 분석 결과 -->
+                    <div id="physiognomyResult" style="display: none; margin-top: 24px;">
+                        <!-- 종합 점수 -->
+                        <div style="text-align: center; padding: 24px; background: var(--apple-light-gray); border-radius: var(--border-radius-md); margin-bottom: 24px;">
+                            <span class="caption">종합 관상 점수</span>
+                            <div id="physioGrade" style="font-size: 64px; font-weight: 700; color: var(--apple-blue); margin-top: 8px;">-</div>
+                            <div id="physioScore" style="font-size: 24px; font-weight: 600;">-- 점</div>
+                            <p id="physioGradeDesc" class="body-text" style="margin-top: 8px; color: var(--apple-gray);">-</p>
+                        </div>
+
+                        <!-- 얼굴형 및 주요 특징 -->
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
+                            <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                <span class="caption">얼굴형</span>
+                                <p id="faceShapeResult" class="h4" style="margin-top: 8px;">-</p>
+                                <p id="faceShapeMeaning" class="caption" style="margin-top: 4px; color: var(--apple-gray);">-</p>
+                            </div>
+                            <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                <span class="caption">이마</span>
+                                <p id="foreheadResult" class="h4" style="margin-top: 8px;">-</p>
+                                <p id="foreheadMeaning" class="caption" style="margin-top: 4px; color: var(--apple-gray);">-</p>
+                            </div>
+                            <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                <span class="caption">코</span>
+                                <p id="noseResult" class="h4" style="margin-top: 8px;">-</p>
+                                <p id="noseMeaning" class="caption" style="margin-top: 4px; color: var(--apple-gray);">-</p>
+                            </div>
+                        </div>
+
+                        <!-- 삼정 (초년/중년/말년운) -->
+                        <div style="margin-bottom: 24px;">
+                            <h4 class="h4" style="margin-bottom: 16px;">삼정 분석 (초년/중년/말년)</h4>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                                <div id="upperThirdCard" style="padding: 16px; border-radius: var(--border-radius-sm); text-align: center; border: 2px solid var(--apple-gray);">
+                                    <span class="caption">상정 (초년운)</span>
+                                    <p id="upperThirdScore" class="h3" style="margin-top: 8px;">-</p>
+                                    <p id="upperThirdDesc" class="caption" style="margin-top: 4px;">-</p>
+                                </div>
+                                <div id="middleThirdCard" style="padding: 16px; border-radius: var(--border-radius-sm); text-align: center; border: 2px solid var(--apple-gray);">
+                                    <span class="caption">중정 (중년운)</span>
+                                    <p id="middleThirdScore" class="h3" style="margin-top: 8px;">-</p>
+                                    <p id="middleThirdDesc" class="caption" style="margin-top: 4px;">-</p>
+                                </div>
+                                <div id="lowerThirdCard" style="padding: 16px; border-radius: var(--border-radius-sm); text-align: center; border: 2px solid var(--apple-gray);">
+                                    <span class="caption">하정 (말년운)</span>
+                                    <p id="lowerThirdScore" class="h3" style="margin-top: 8px;">-</p>
+                                    <p id="lowerThirdDesc" class="caption" style="margin-top: 4px;">-</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 12궁 분석 -->
+                        <div style="margin-bottom: 24px;">
+                            <h4 class="h4" style="margin-bottom: 16px;">12궁 분석</h4>
+                            <div id="twelvePalacesGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                                <!-- 동적으로 생성됨 -->
+                            </div>
+                        </div>
+
+                        <!-- 종합 해석 -->
+                        <div style="padding: 24px; background: linear-gradient(135deg, rgba(0,113,227,0.1), rgba(52,199,89,0.1)); border-radius: var(--border-radius-md);">
+                            <h4 class="h4" style="margin-bottom: 12px;">종합 해석</h4>
+                            <div id="physioSummary" class="body-text" style="line-height: 1.8;"></div>
+                            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.1);">
+                                <h5 style="font-weight: 600; margin-bottom: 8px;">조언</h5>
+                                <ul id="physioAdvice" style="list-style: disc; padding-left: 20px; color: var(--apple-gray);"></ul>
+                            </div>
+                        </div>
+
+                        <!-- 다시 분석 버튼 -->
+                        <div style="text-align: center; margin-top: 24px;">
+                            <button class="btn btn-secondary" id="resetPhysioBtn">다른 사진으로 분석</button>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    @keyframes spin {
+                        to { transform: rotate(360deg); }
+                    }
+                    #uploadArea.dragover {
+                        border-color: var(--apple-blue);
+                        background: rgba(0, 113, 227, 0.05);
+                    }
+                </style>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-content">
+            <p style="font-size: 18px; font-weight: 600;">Astro-Synthesis</p>
+            <p class="caption" style="margin-top: 8px;">AI 통합 역학 플랫폼</p>
+
+            <div class="btn-group" style="margin-top: 24px; justify-content: center;">
+                <a href="#" class="nav-link">개인정보처리방침</a>
+                <a href="#" class="nav-link">서비스이용약관</a>
+                <a href="#" class="nav-link">윤리 강령</a>
+                <a href="#" class="nav-link">API 문서</a>
+            </div>
+
+            <div class="disclaimer">
+                <p>
+                    본 서비스의 모든 분석 결과는 통계적 데이터와 알고리즘에 기반한 참고 자료이며,
+                    의학적, 법적, 재정적 조언을 대체하지 않습니다. 중요한 결정은 반드시 전문가와 상담하시기 바랍니다.
+                </p>
+                <p style="margin-top: 12px;">
+                    Copyright 2025 Astro-Synthesis. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MediaPipe Face Mesh -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+
+    <!-- 계산 모듈 -->
+    <script src="saju.js"></script>
+    <script src="astrology.js"></script>
+    <script src="synthesis.js"></script>
+    <script src="chart.js"></script>
+    <script src="physiognomy.js"></script>
+    <script src="api-client.js"></script>
+
+    <script>
+        // Scroll Fade Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.scroll-fade').forEach((el) => observer.observe(el));
+
+        // API 서버 상태 확인
+        async function checkAPIServerStatus() {
+            const calcModeSelect = document.getElementById('inputCalcMode');
+            const apiStatus = document.getElementById('apiStatus');
+
+            try {
+                const health = await astroAPI.healthCheck();
+                console.log('API 서버 상태:', health);
+
+                // API 옵션 활성화
+                if (calcModeSelect) {
+                    const apiOption = calcModeSelect.querySelector('option[value="api"]');
+                    if (apiOption) {
+                        apiOption.textContent = '서버 API (정밀) ✓';
+                        apiOption.disabled = false;
+                    }
+                }
+                if (apiStatus) {
+                    apiStatus.textContent = '서버 연결됨';
+                    apiStatus.style.color = 'var(--apple-green)';
+                }
+                return true;
+            } catch (error) {
+                console.log('API 서버 오프라인:', error.message);
+
+                // API 옵션 비활성화
+                if (calcModeSelect) {
+                    const apiOption = calcModeSelect.querySelector('option[value="api"]');
+                    if (apiOption) {
+                        apiOption.textContent = '서버 API (오프라인)';
+                        apiOption.disabled = true;
+                    }
+                    calcModeSelect.value = 'local';
+                }
+                if (apiStatus) {
+                    apiStatus.textContent = '서버 오프라인 - 로컬 모드 사용';
+                    apiStatus.style.color = 'var(--apple-gray)';
+                }
+                return false;
+            }
+        }
+
+        // 페이지 로드 시 서버 상태 확인
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAPIServerStatus();
+        });
+
+        // 오행 색상 매핑
+        const elementColors = {
+            '木': '#34c759', // 초록
+            '火': '#ff3b30', // 빨강
+            '土': '#ff9500', // 주황/노랑
+            '金': '#ffffff', // 흰색
+            '水': '#007aff'  // 파랑
+        };
+
+        const elementNames = {
+            '木': '목(木)', '火': '화(火)', '土': '토(土)', '金': '금(金)', '水': '수(水)'
+        };
+
+        // 사주 결과 표시 함수
+        function displaySajuResult(result) {
+            // 사주팔자 표시
+            document.getElementById('yearPillar').textContent = result.saju.year.name;
+            document.getElementById('monthPillar').textContent = result.saju.month.name;
+            document.getElementById('dayPillar').textContent = result.saju.day.name;
+            document.getElementById('hourPillar').textContent = result.saju.hour.name;
+
+            // 십신 표시
+            document.getElementById('yearSipsin').textContent = result.sipsin.year.cheongan;
+            document.getElementById('monthSipsin').textContent = result.sipsin.month.cheongan;
+            document.getElementById('hourSipsin').textContent = result.sipsin.hour.cheongan;
+
+            // 용신과 일간 표시
+            document.getElementById('yongsinDisplay').textContent = elementNames[result.elementAnalysis.yongsin];
+            document.getElementById('dayMasterDisplay').textContent =
+                `${result.dayMaster.name}(${result.dayMaster.korean}) - ${result.dayMaster.elementKr}`;
+
+            // 대운 표시
+            displayDaeun(result.daeun);
+
+            // 오행 분석 표시
+            displayElementAnalysis(result.elementAnalysis);
+
+            // 종합 점수 표시
+            displayOverallScore(result.overallScore);
+
+            // 12신살 표시
+            display12Sinsal(result.sinsal12);
+
+            // 공망 표시
+            displayGongmang(result.gongmang);
+
+            // 관계 표시
+            displayRelations(result.relations);
+
+            // 세운 표시
+            displayYearlyFortune(result.fiveYearFortune);
+
+            // 지장간 표시
+            displayJijanggan(result.jijanggan);
+
+            // 모든 카드 표시
+            document.getElementById('daeunCard').style.display = 'block';
+            document.getElementById('elementCard').style.display = 'block';
+            document.getElementById('scoreCard').style.display = 'block';
+            document.getElementById('sinsalCard').style.display = 'block';
+            document.getElementById('gongmangCard').style.display = 'block';
+            document.getElementById('relationsCard').style.display = 'block';
+            document.getElementById('fortuneCard').style.display = 'block';
+            document.getElementById('jijangganCard').style.display = 'block';
+
+            // SVG 차트 렌더링
+            ChartRenderer.renderSajuChart('sajuChartContainer', result);
+            ChartRenderer.renderElementChart('elementChartContainer', result.elementAnalysis);
+
+            // 결과 섹션으로 스크롤
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 종합 점수 표시 함수
+        function displayOverallScore(score) {
+            const gradeColors = {
+                'S': '#ff2d55',
+                'A': '#ff9500',
+                'B': '#34c759',
+                'C': '#007aff',
+                'D': '#8e8e93'
+            };
+
+            document.getElementById('scoreGrade').textContent = score.grade;
+            document.getElementById('scoreGrade').style.color = gradeColors[score.grade] || 'var(--apple-blue)';
+            document.getElementById('scoreValue').textContent = `${score.score}점`;
+            document.getElementById('scoreDesc').textContent = score.gradeDesc;
+
+            document.getElementById('scoreBreakdown').innerHTML = `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span class="caption">신살 점수</span>
+                    <span class="body-text" style="font-weight: 600;">${score.breakdown.sinsal > 0 ? '+' : ''}${score.breakdown.sinsal}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span class="caption">관계 점수</span>
+                    <span class="body-text" style="font-weight: 600;">${score.breakdown.relations > 0 ? '+' : ''}${score.breakdown.relations}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span class="caption">균형 점수</span>
+                    <span class="body-text" style="font-weight: 600;">+${score.breakdown.balance}</span>
+                </div>
+            `;
+        }
+
+        // 12신살 표시 함수
+        function display12Sinsal(sinsal) {
+            const container = document.getElementById('sinsalGrid');
+            const pillars = [
+                { key: 'hour', name: '시주' },
+                { key: 'day', name: '일주' },
+                { key: 'month', name: '월주' },
+                { key: 'year', name: '년주' }
+            ];
+
+            container.innerHTML = pillars.map(p => {
+                const info = sinsal[p.key];
+                const isGood = info && info.good;
+                return `
+                    <div style="
+                        background: ${isGood ? 'rgba(52, 199, 89, 0.1)' : 'rgba(255, 59, 48, 0.1)'};
+                        padding: 16px;
+                        border-radius: var(--border-radius-sm);
+                        text-align: center;
+                        border: 2px solid ${isGood ? 'var(--status-good)' : 'var(--status-bad)'};
+                    ">
+                        <p class="caption">${p.name}</p>
+                        <p class="h4" style="margin-top: 4px; color: ${isGood ? 'var(--status-good)' : 'var(--status-bad)'};">
+                            ${info ? info.name : '-'}
+                        </p>
+                        <p class="caption" style="margin-top: 4px;">${info ? info.meaning : '-'}</p>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('sinsalSummary').textContent = sinsal.summary;
+        }
+
+        // 공망 표시 함수
+        function displayGongmang(gongmang) {
+            const container = document.getElementById('gongmangDisplay');
+
+            container.innerHTML = `
+                <div style="
+                    display: flex;
+                    gap: 12px;
+                    justify-content: center;
+                    margin-bottom: 16px;
+                ">
+                    ${gongmang.gongmangKr.map(g => `
+                        <div style="
+                            background: var(--apple-light-gray);
+                            padding: 12px 24px;
+                            border-radius: var(--border-radius-sm);
+                            font-size: 20px;
+                            font-weight: 600;
+                        ">${g}</div>
+                    `).join('')}
+                </div>
+                <p class="body-text" style="color: ${gongmang.hasGongmang ? 'var(--status-warning)' : 'var(--status-good)'};">
+                    ${gongmang.description}
+                </p>
+                ${gongmang.hasGongmang ? `
+                    <p class="caption" style="margin-top: 8px; color: var(--apple-gray);">
+                        * 공망은 기운이 비어있는 상태로, 해당 지지의 작용이 약해집니다.
+                    </p>
+                ` : ''}
+            `;
+        }
+
+        // 관계 표시 함수
+        function displayRelations(relations) {
+            const goodList = document.getElementById('goodRelationsList');
+            const badList = document.getElementById('badRelationsList');
+
+            // 좋은 관계
+            const goodItems = [
+                ...relations.cheonganHap.map(r => `<div class="relation-item">${r.desc}</div>`),
+                ...relations.yukhap.map(r => `<div class="relation-item">${r.desc}</div>`),
+                ...relations.samhap.map(r => `<div class="relation-item">${r.desc}</div>`),
+                ...relations.banghap.map(r => `<div class="relation-item">${r.desc}</div>`)
+            ];
+
+            goodList.innerHTML = goodItems.length > 0
+                ? goodItems.join('')
+                : '<p class="caption" style="color: var(--apple-gray);">합이 없습니다.</p>';
+
+            // 나쁜 관계
+            const badItems = [
+                ...relations.chung.map(r => `<div class="relation-item bad">${r.desc}</div>`),
+                ...relations.hyung.map(r => `<div class="relation-item bad">${r.desc}</div>`),
+                ...relations.pa.map(r => `<div class="relation-item bad">${r.desc}</div>`),
+                ...relations.hae.map(r => `<div class="relation-item bad">${r.desc}</div>`)
+            ];
+
+            badList.innerHTML = badItems.length > 0
+                ? badItems.join('')
+                : '<p class="caption" style="color: var(--apple-gray);">충/형/파/해가 없습니다.</p>';
+        }
+
+        // 세운 표시 함수
+        function displayYearlyFortune(fortuneList) {
+            const container = document.getElementById('fortuneList');
+            const currentYear = new Date().getFullYear();
+
+            container.innerHTML = fortuneList.map((fortune, index) => {
+                const isCurrentYear = fortune.year === currentYear;
+                const sinsalGood = fortune.sinsal && fortune.sinsal.good;
+
+                return `
+                    <div style="
+                        min-width: 140px;
+                        padding: 16px;
+                        background: ${isCurrentYear ? 'var(--apple-blue)' : 'var(--apple-light-gray)'};
+                        color: ${isCurrentYear ? 'white' : 'var(--apple-dark-gray)'};
+                        border-radius: var(--border-radius-sm);
+                        text-align: center;
+                        ${fortune.hasChung ? 'border: 2px solid var(--status-bad);' : ''}
+                    ">
+                        <p style="font-size: 12px; opacity: 0.8;">${fortune.year}년</p>
+                        <p style="font-size: 24px; font-weight: 600; margin-top: 4px;">${fortune.pillar.korean}</p>
+                        <p style="font-size: 14px; margin-top: 8px;">
+                            ${fortune.sipsin.cheongan} / ${fortune.sipsin.jiji}
+                        </p>
+                        ${fortune.sinsal ? `
+                            <p style="
+                                font-size: 12px;
+                                margin-top: 8px;
+                                padding: 4px 8px;
+                                background: ${isCurrentYear ? 'rgba(255,255,255,0.2)' : (sinsalGood ? 'rgba(52,199,89,0.1)' : 'rgba(255,59,48,0.1)')};
+                                border-radius: 4px;
+                                color: ${isCurrentYear ? 'white' : (sinsalGood ? 'var(--status-good)' : 'var(--status-bad)')};
+                            ">${fortune.sinsal.name}</p>
+                        ` : ''}
+                        ${fortune.hasChung ? `
+                            <p style="font-size: 11px; margin-top: 4px; color: ${isCurrentYear ? 'rgba(255,255,255,0.8)' : 'var(--status-bad)'};">충 주의</p>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 지장간 표시 함수
+        function displayJijanggan(jijanggan) {
+            const container = document.getElementById('jijangganDisplay');
+            const order = ['hour', 'day', 'month', 'year'];
+
+            container.innerHTML = order.map(key => {
+                const info = jijanggan[key];
+                return `
+                    <div style="
+                        background: var(--apple-light-gray);
+                        padding: 16px;
+                        border-radius: var(--border-radius-sm);
+                    ">
+                        <p class="caption" style="text-align: center; margin-bottom: 12px;">
+                            ${info.name} (${info.jiji})
+                        </p>
+                        ${info.jijanggan.map(jj => `
+                            <div style="
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                padding: 8px;
+                                margin-bottom: 4px;
+                                background: white;
+                                border-radius: 4px;
+                            ">
+                                <span style="
+                                    font-weight: 600;
+                                    color: ${elementColors[jj.element]};
+                                    ${jj.element === '金' ? 'text-shadow: 0 0 1px #333;' : ''}
+                                ">${jj.gan}(${jj.korean})</span>
+                                <span class="caption">${jj.type} ${jj.ratio}%</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ========== 서양 점성술 표시 함수들 ==========
+
+        // 점성술 기본 정보 표시
+        function displayAstrologyBasic(astroResult) {
+            document.getElementById('astroSun').textContent =
+                `${astroResult.sunSign.symbol} ${astroResult.sunSign.korean}`;
+
+            document.getElementById('astroMoon').textContent =
+                `${astroResult.moonSign.sign.symbol} ${astroResult.moonSign.formatted}`;
+
+            document.getElementById('astroAsc').textContent =
+                `${astroResult.ascendant.sign.symbol} ${astroResult.ascendant.formatted}`;
+
+            document.getElementById('astroDominant').textContent =
+                `${astroResult.elementAnalysis.dominant.elementKr} (${astroResult.elementAnalysis.dominant.count}개)`;
+        }
+
+        // 행성 위치 표시
+        function displayPlanets(planetPositions) {
+            const container = document.getElementById('planetsGrid');
+            const planetOrder = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'];
+
+            container.innerHTML = planetOrder.map(name => {
+                const pos = planetPositions[name];
+                if (!pos) return '';
+
+                return `
+                    <div style="
+                        background: var(--apple-light-gray);
+                        padding: 12px;
+                        border-radius: var(--border-radius-sm);
+                        text-align: center;
+                    ">
+                        <div style="font-size: 24px;">${pos.planet.symbol}</div>
+                        <p class="caption" style="margin-top: 4px;">${pos.planet.korean}</p>
+                        <p style="font-size: 18px; margin-top: 8px;">${pos.sign.symbol}</p>
+                        <p class="caption" style="margin-top: 2px;">${pos.sign.korean}</p>
+                        <p class="caption" style="margin-top: 4px; color: var(--apple-gray);">
+                            ${pos.degree}° ${pos.minute}'
+                        </p>
+                        ${pos.retrograde ? '<p style="color: var(--status-bad); font-size: 11px; margin-top: 4px;">역행 ℞</p>' : ''}
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('planetsCard').style.display = 'block';
+        }
+
+        // 어스펙트 표시
+        function displayAspects(astroResult) {
+            const positiveContainer = document.getElementById('positiveAspects');
+            const challengingContainer = document.getElementById('challengingAspects');
+
+            const planetKorean = {};
+            Object.entries(astroResult.planetPositions).forEach(([name, pos]) => {
+                planetKorean[name] = pos.planet.korean;
+            });
+
+            // 긍정적 어스펙트
+            if (astroResult.positiveAspects.length > 0) {
+                positiveContainer.innerHTML = astroResult.positiveAspects.map(asp => `
+                    <div class="relation-item">
+                        ${planetKorean[asp.planet1]} ${asp.aspect.symbol} ${planetKorean[asp.planet2]}
+                        <span style="font-size: 12px; opacity: 0.8;"> (${asp.aspect.korean})</span>
+                    </div>
+                `).join('');
+            } else {
+                positiveContainer.innerHTML = '<p class="caption" style="color: var(--apple-gray);">긍정적 어스펙트가 없습니다.</p>';
+            }
+
+            // 도전적 어스펙트
+            if (astroResult.challengingAspects.length > 0) {
+                challengingContainer.innerHTML = astroResult.challengingAspects.map(asp => `
+                    <div class="relation-item bad">
+                        ${planetKorean[asp.planet1]} ${asp.aspect.symbol} ${planetKorean[asp.planet2]}
+                        <span style="font-size: 12px; opacity: 0.8;"> (${asp.aspect.korean})</span>
+                    </div>
+                `).join('');
+            } else {
+                challengingContainer.innerHTML = '<p class="caption" style="color: var(--apple-gray);">도전적 어스펙트가 없습니다.</p>';
+            }
+
+            document.getElementById('aspectsCard').style.display = 'block';
+        }
+
+        // 전체 점성술 결과 표시
+        function displayAstrologyResult(astroResult) {
+            displayAstrologyBasic(astroResult);
+            displayPlanets(astroResult.planetPositions);
+            displayAspects(astroResult);
+
+            // SVG 천궁도 렌더링
+            ChartRenderer.renderAstroChart('astroChartContainer', astroResult);
+        }
+
+        // ========== AHP 통합 분석 표시 함수들 ==========
+
+        // 통합 분석 결과 표시
+        function displaySynthesisResult(synthesis) {
+            const gradeColors = {
+                'S': '#ff2d55',
+                'A': '#ff9500',
+                'B': '#34c759',
+                'C': '#007aff',
+                'D': '#8e8e93'
+            };
+
+            const grade = synthesis.overallGrade;
+            const titleColor = gradeColors[grade.grade] || 'var(--apple-blue)';
+
+            // 제목 및 설명
+            document.getElementById('synthesisTitle').textContent = grade.description.split('.')[0];
+            document.getElementById('synthesisTitle').style.color = titleColor;
+
+            // 해석 내용
+            if (synthesis.interpretation.length > 0) {
+                document.getElementById('synthesisContent').textContent =
+                    synthesis.interpretation[0].content;
+            }
+
+            // 점수 및 바
+            document.getElementById('synthesisScore').textContent = `${grade.score}점 (${grade.grade}등급)`;
+            document.getElementById('synthesisBar').style.width = `${grade.score}%`;
+            document.getElementById('synthesisBar').style.background = titleColor;
+
+            // 가중치 표시
+            document.getElementById('easternWeight').textContent =
+                `${Math.round(synthesis.weights.eastern * 100)}%`;
+            document.getElementById('westernWeight').textContent =
+                `${Math.round(synthesis.weights.western * 100)}%`;
+
+            // 등급 배지
+            document.getElementById('synthesisGrade').innerHTML = `
+                <div style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 8px 16px;
+                    background: ${titleColor}15;
+                    border-radius: 20px;
+                    border: 1px solid ${titleColor};
+                ">
+                    <span style="font-size: 24px; font-weight: 700; color: ${titleColor};">${grade.grade}</span>
+                    <span style="color: ${titleColor}; font-size: 14px;">${grade.harmony === 'high' ? '높은 조화' : grade.harmony === 'medium' ? '보통 조화' : '주의 필요'}</span>
+                </div>
+            `;
+
+            // 성격 프로필 카드 업데이트 (별도 카드가 있다면)
+            displayPersonalityProfile(synthesis.personalityProfile);
+
+            // 추천 사항
+            displayRecommendations(synthesis.recommendations);
+        }
+
+        // 성격 프로필 표시
+        function displayPersonalityProfile(profile) {
+            // 기존 통합 결론 카드 아래에 간단히 표시
+            const container = document.getElementById('synthesisGrade');
+            const existingProfile = container.querySelector('.profile-summary');
+
+            if (existingProfile) {
+                existingProfile.remove();
+            }
+
+            const profileHtml = `
+                <div class="profile-summary" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e5e5ea;">
+                    <p class="caption" style="margin-bottom: 8px;">성격 특성</p>
+                    <p class="body-text" style="font-size: 14px;">
+                        <strong>업무:</strong> ${profile.workStyle}<br>
+                        <strong>관계:</strong> ${profile.socialStyle}<br>
+                        <strong>감성:</strong> ${profile.emotionalPattern}
+                    </p>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', profileHtml);
+        }
+
+        // 추천 사항 표시
+        function displayRecommendations(recommendations) {
+            // 콘솔에 출력 (추후 별도 UI 추가 가능)
+            console.log('추천 사항:', recommendations);
+        }
+
+        // 대운 표시 함수
+        function displayDaeun(daeunList) {
+            const container = document.getElementById('daeunList');
+            container.innerHTML = '';
+
+            const currentYear = new Date().getFullYear();
+
+            daeunList.forEach((daeun, index) => {
+                const isActive = currentYear >= daeun.startYear && currentYear <= daeun.endYear;
+                const isPast = currentYear > daeun.endYear;
+
+                const daeunItem = document.createElement('div');
+                daeunItem.style.cssText = `
+                    min-width: 100px;
+                    padding: 16px;
+                    background: ${isActive ? 'var(--apple-blue)' : 'var(--apple-light-gray)'};
+                    color: ${isActive ? 'white' : 'var(--apple-dark-gray)'};
+                    border-radius: var(--border-radius-sm);
+                    text-align: center;
+                    opacity: ${isPast ? '0.5' : '1'};
+                    transition: var(--transition-normal);
+                `;
+
+                daeunItem.innerHTML = `
+                    <p style="font-size: 12px; opacity: 0.8;">${daeun.startAge}~${daeun.endAge}세</p>
+                    <p style="font-size: 24px; font-weight: 600; margin-top: 4px;">${daeun.name}</p>
+                    <p style="font-size: 11px; margin-top: 4px;">${daeun.startYear}~${daeun.endYear}</p>
+                `;
+
+                container.appendChild(daeunItem);
+            });
+        }
+
+        // 오행 분석 표시 함수
+        function displayElementAnalysis(analysis) {
+            const chartContainer = document.getElementById('elementChart');
+            const summaryContainer = document.getElementById('elementSummary');
+
+            chartContainer.innerHTML = '';
+
+            const maxCount = Math.max(...Object.values(analysis.distribution));
+
+            // 오행 바 차트 생성
+            for (const [element, count] of Object.entries(analysis.distribution)) {
+                const barHeight = (count / 8) * 120 + 20; // 최소 20px
+                const isYongsin = element === analysis.yongsin;
+
+                const bar = document.createElement('div');
+                bar.style.cssText = `
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 8px;
+                `;
+
+                bar.innerHTML = `
+                    <div style="
+                        width: 50px;
+                        height: ${barHeight}px;
+                        background: ${element === '金' ? 'linear-gradient(135deg, #c0c0c0, #f5f5f5)' : elementColors[element]};
+                        border-radius: 8px 8px 4px 4px;
+                        display: flex;
+                        align-items: flex-end;
+                        justify-content: center;
+                        padding-bottom: 8px;
+                        box-shadow: ${isYongsin ? '0 0 0 3px var(--apple-blue)' : 'var(--shadow-sm)'};
+                        color: ${element === '金' || element === '土' ? '#333' : 'white'};
+                        font-weight: 600;
+                        transition: var(--transition-normal);
+                    ">${count}</div>
+                    <span style="
+                        font-size: 14px;
+                        font-weight: ${isYongsin ? '700' : '500'};
+                        color: ${isYongsin ? 'var(--apple-blue)' : 'var(--apple-dark-gray)'};
+                    ">${elementNames[element]}</span>
+                    ${isYongsin ? '<span style="font-size: 11px; color: var(--apple-blue);">용신</span>' : ''}
+                `;
+
+                chartContainer.appendChild(bar);
+            }
+
+            // 요약 정보
+            summaryContainer.innerHTML = `
+                <p class="body-text" style="margin-top: 16px;">
+                    <strong>가장 강한 오행:</strong> ${elementNames[analysis.strongest.element]} (${analysis.strongest.count}개)
+                    &nbsp;|&nbsp;
+                    <strong>가장 약한 오행:</strong> ${elementNames[analysis.weakest.element]} (${analysis.weakest.count}개)
+                </p>
+                <p class="caption" style="margin-top: 8px; color: var(--apple-gray);">
+                    * 용신(用神)은 사주에서 부족한 오행을 보충하여 균형을 맞추는 역할을 합니다.
+                </p>
+            `;
+        }
+
+        // Form Submit Handler
+        document.getElementById('birthForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // 입력값 가져오기
+            const name = document.getElementById('inputName').value;
+            const birthDateInput = document.getElementById('inputBirthDate').value;
+            const birthTimeInput = document.getElementById('inputBirthTime').value;
+            const birthPlace = document.getElementById('inputBirthPlace').value;
+            const gender = document.getElementById('inputGender').value;
+            const analysisType = document.getElementById('inputAnalysisType').value;
+            const calcMode = document.getElementById('inputCalcMode').value;
+
+            // 유효성 검사
+            if (!birthDateInput) {
+                alert('생년월일을 입력해주세요.');
+                return;
+            }
+
+            // 날짜 파싱
+            const [year, month, day] = birthDateInput.split('-').map(Number);
+
+            // 시간 파싱 (없으면 12시로 기본값)
+            let hour = 12;
+            let minute = 0;
+            if (birthTimeInput) {
+                const timeParts = birthTimeInput.split(':');
+                hour = parseInt(timeParts[0], 10);
+                minute = parseInt(timeParts[1], 10) || 0;
+            }
+
+            // 성별 기본값
+            const genderValue = gender || 'male';
+
+            // 위도/경도 (서울 기본값, 실제 서비스에서는 지오코딩 API 사용)
+            const latitude = 37.5665;
+            const longitude = 126.9780;
+
+            const submitBtn = document.getElementById('submitBtn');
+            const apiStatus = document.getElementById('apiStatus');
+
+            // API 모드
+            if (calcMode === 'api') {
+                submitBtn.disabled = true;
+                submitBtn.textContent = '분석 중...';
+                apiStatus.textContent = '서버에 연결 중...';
+                apiStatus.style.color = 'var(--apple-blue)';
+
+                try {
+                    let sajuResult = null;
+                    let astroResult = null;
+                    let synthesisResult = null;
+
+                    // 분석 유형에 따라 API 호출
+                    if (analysisType === 'eastern' || analysisType === 'integrated') {
+                        apiStatus.textContent = '사주 분석 중...';
+                        const sajuResponse = await astroAPI.analyzeSaju({
+                            birth_year: year,
+                            birth_month: month,
+                            birth_day: day,
+                            birth_hour: hour,
+                            gender: genderValue
+                        });
+                        console.log('API 사주 결과:', sajuResponse);
+                        sajuResult = convertAPIResultToLocal(sajuResponse, 'saju');
+                    }
+
+                    if (analysisType === 'western' || analysisType === 'integrated') {
+                        apiStatus.textContent = '점성술 분석 중...';
+                        const astroResponse = await astroAPI.createNatalChart({
+                            birth_year: year,
+                            birth_month: month,
+                            birth_day: day,
+                            birth_hour: hour,
+                            birth_minute: minute,
+                            latitude: latitude,
+                            longitude: longitude
+                        });
+                        console.log('API 점성술 결과:', astroResponse);
+                        astroResult = convertAPIResultToLocal(astroResponse, 'astrology');
+                    }
+
+                    // 통합 분석
+                    if (analysisType === 'integrated' && sajuResult && astroResult) {
+                        apiStatus.textContent = '통합 분석 중...';
+                        synthesisResult = SynthesisEngine.synthesize(
+                            sajuResult,
+                            astroResult,
+                            'general'
+                        );
+                    }
+
+                    // 결과 표시
+                    if (sajuResult) displaySajuResult(sajuResult);
+                    if (astroResult) displayAstrologyResult(astroResult);
+                    if (synthesisResult) displaySynthesisResult(synthesisResult);
+
+                    // 전역 변수에 저장
+                    window.lastSajuResult = sajuResult;
+                    window.lastAstroResult = astroResult;
+                    window.lastSynthesisResult = synthesisResult;
+
+                    apiStatus.textContent = '분석 완료 (서버 API)';
+                    apiStatus.style.color = 'var(--apple-green)';
+
+                } catch (error) {
+                    console.error('API 오류:', error);
+                    apiStatus.textContent = `API 오류: ${error.message}`;
+                    apiStatus.style.color = 'var(--apple-red)';
+                    alert('서버 연결에 실패했습니다. 로컬 모드로 전환하거나 서버 상태를 확인하세요.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '분석 시작';
+                }
+            } else {
+                // 로컬 모드 (기존 코드)
+                apiStatus.textContent = '';
+                try {
+                    // 사주 계산
+                    const sajuResult = SajuCalculator.calculate({
+                        year: year,
+                        month: month,
+                        day: day,
+                        hour: hour,
+                        gender: genderValue
+                    });
+
+                    console.log('사주 계산 결과:', sajuResult);
+
+                    // 서양 점성술 계산
+                    const astroResult = AstrologyCalculator.calculate({
+                        year: year,
+                        month: month,
+                        day: day,
+                        hour: hour,
+                        minute: minute,
+                        latitude: latitude,
+                        longitude: longitude
+                    });
+
+                    console.log('점성술 계산 결과:', astroResult);
+
+                    // AHP 통합 분석
+                    const synthesisResult = SynthesisEngine.synthesize(
+                        sajuResult,
+                        astroResult,
+                        'general'
+                    );
+
+                    console.log('통합 분석 결과:', synthesisResult);
+
+                    // 결과 표시
+                    displaySajuResult(sajuResult);
+                    displayAstrologyResult(astroResult);
+                    displaySynthesisResult(synthesisResult);
+
+                    // 전역 변수에 저장
+                    window.lastSajuResult = sajuResult;
+                    window.lastAstroResult = astroResult;
+                    window.lastSynthesisResult = synthesisResult;
+
+                    apiStatus.textContent = '분석 완료 (로컬)';
+                    apiStatus.style.color = 'var(--apple-green)';
+
+                } catch (error) {
+                    console.error('계산 오류:', error);
+                    alert('분석 중 오류가 발생했습니다. 입력값을 확인해주세요.');
+                }
+            }
+        });
+
+        /**
+         * API 응답을 로컬 형식으로 변환
+         */
+        function convertAPIResultToLocal(apiResponse, type) {
+            if (type === 'saju') {
+                // API 응답을 SajuCalculator 결과 형식으로 변환
+                const stems = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
+                const branches = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
+
+                const yearPillar = apiResponse.year_pillar;
+                const monthPillar = apiResponse.month_pillar;
+                const dayPillar = apiResponse.day_pillar;
+                const hourPillar = apiResponse.hour_pillar;
+
+                return {
+                    saju: {
+                        year: { name: yearPillar.stem + yearPillar.branch, stem: yearPillar.stem, branch: yearPillar.branch },
+                        month: { name: monthPillar.stem + monthPillar.branch, stem: monthPillar.stem, branch: monthPillar.branch },
+                        day: { name: dayPillar.stem + dayPillar.branch, stem: dayPillar.stem, branch: dayPillar.branch },
+                        hour: hourPillar ? { name: hourPillar.stem + hourPillar.branch, stem: hourPillar.stem, branch: hourPillar.branch } : { name: '-', stem: '', branch: '' }
+                    },
+                    dayMaster: {
+                        name: dayPillar.stem,
+                        korean: dayPillar.stem,
+                        element: apiResponse.dominant_element,
+                        elementKr: getElementKorean(apiResponse.dominant_element)
+                    },
+                    elementAnalysis: {
+                        wood: apiResponse.element_balance.wood || 0,
+                        fire: apiResponse.element_balance.fire || 0,
+                        earth: apiResponse.element_balance.earth || 0,
+                        metal: apiResponse.element_balance.metal || 0,
+                        water: apiResponse.element_balance.water || 0,
+                        yongsin: getElementHanja(apiResponse.yongsin),
+                        gisin: getElementHanja(apiResponse.gisin),
+                        dominant: getElementHanja(apiResponse.dominant_element),
+                        weak: getElementHanja(apiResponse.weak_element)
+                    },
+                    sipsin: {
+                        year: { cheongan: '-', jiji: '-' },
+                        month: { cheongan: '-', jiji: '-' },
+                        hour: { cheongan: '-', jiji: '-' }
+                    },
+                    daeun: [],
+                    fiveYearFortune: [],
+                    sinsal12: {},
+                    gongmang: [],
+                    relations: [],
+                    jijanggan: {},
+                    overallScore: { total: 75, grade: 'B', category: {} },
+                    summary: apiResponse.summary || ''
+                };
+            } else if (type === 'astrology') {
+                // API 응답을 AstrologyCalculator 결과 형식으로 변환
+                const planets = apiResponse.planets || [];
+                const aspects = apiResponse.aspects || [];
+
+                // 행성 위치 변환
+                const planetPositions = {};
+                planets.forEach(p => {
+                    const name = p.planet.toLowerCase();
+                    planetPositions[name] = {
+                        sign: p.sign,
+                        degree: p.sign_degree || 0,
+                        house: p.house,
+                        retrograde: p.is_retrograde || false
+                    };
+                });
+
+                // 어스펙트 분류
+                const positiveAspects = [];
+                const challengingAspects = [];
+                const aspectSymbols = {
+                    'conjunction': '☌', 'sextile': '⚹', 'trine': '△',
+                    'square': '□', 'opposition': '☍'
+                };
+                const aspectKorean = {
+                    'conjunction': '합', 'sextile': '육합', 'trine': '삼합',
+                    'square': '스퀘어', 'opposition': '충'
+                };
+
+                aspects.forEach(a => {
+                    const aspectData = {
+                        planet1: a.planet1 ? a.planet1.toLowerCase() : '',
+                        planet2: a.planet2 ? a.planet2.toLowerCase() : '',
+                        aspect: {
+                            type: a.aspect_type,
+                            symbol: aspectSymbols[a.aspect_type] || '?',
+                            korean: aspectKorean[a.aspect_type] || a.aspect_type
+                        },
+                        orb: a.orb || 0
+                    };
+
+                    if (['trine', 'sextile', 'conjunction'].includes(a.aspect_type)) {
+                        positiveAspects.push(aspectData);
+                    } else {
+                        challengingAspects.push(aspectData);
+                    }
+                });
+
+                return {
+                    sunSign: apiResponse.sun_sign,
+                    moonSign: apiResponse.moon_sign,
+                    risingSign: apiResponse.rising_sign,
+                    planetPositions: planetPositions,
+                    planets: planets,
+                    houses: apiResponse.houses || [],
+                    aspects: aspects,
+                    positiveAspects: positiveAspects,
+                    challengingAspects: challengingAspects,
+                    personality_summary: apiResponse.personality_summary || '',
+                    life_themes: apiResponse.life_themes || []
+                };
+            }
+            return apiResponse;
+        }
+
+        function getElementHanja(element) {
+            const map = { 'wood': '木', 'fire': '火', 'earth': '土', 'metal': '金', 'water': '水' };
+            return map[element] || element;
+        }
+
+        function getElementKorean(element) {
+            const map = { 'wood': '목', 'fire': '화', 'earth': '토', 'metal': '금', 'water': '수' };
+            return map[element] || element;
+        }
+
+        // ========== AI 관상 분석 ==========
+        let faceMeshInstance = null;
+        let currentImageElement = null;
+
+        // MediaPipe Face Mesh 초기화
+        async function initializeFaceMesh() {
+            if (faceMeshInstance) return faceMeshInstance;
+
+            faceMeshInstance = new FaceMesh({
+                locateFile: (file) => {
+                    return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+                }
+            });
+
+            faceMeshInstance.setOptions({
+                maxNumFaces: 1,
+                refineLandmarks: true,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            });
+
+            return faceMeshInstance;
+        }
+
+        // Biometric Consent Handler
+        document.getElementById('biometricConsent').addEventListener('change', function() {
+            const uploadBtn = document.getElementById('uploadBtn');
+            uploadBtn.disabled = !this.checked;
+            if (this.checked) {
+                uploadBtn.textContent = '사진 업로드';
+            }
+        });
+
+        // 업로드 영역 클릭
+        document.getElementById('uploadArea').addEventListener('click', function(e) {
+            if (e.target.tagName !== 'BUTTON') {
+                const consent = document.getElementById('biometricConsent');
+                if (consent.checked) {
+                    document.getElementById('photoInput').click();
+                } else {
+                    alert('민감정보 처리에 동의해주세요.');
+                }
+            }
+        });
+
+        // 업로드 버튼 클릭
+        document.getElementById('uploadBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('photoInput').click();
+        });
+
+        // 드래그 앤 드롭
+        const uploadArea = document.getElementById('uploadArea');
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', function() {
+            this.classList.remove('dragover');
+        });
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            const consent = document.getElementById('biometricConsent');
+            if (!consent.checked) {
+                alert('민감정보 처리에 동의해주세요.');
+                return;
+            }
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                handleImageFile(file);
+            }
+        });
+
+        // 파일 선택
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleImageFile(file);
+            }
+        });
+
+        // 이미지 파일 처리
+        function handleImageFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('previewImage');
+                const uploadIcon = document.getElementById('uploadIcon');
+                const uploadText = document.getElementById('uploadText');
+                const uploadBtn = document.getElementById('uploadBtn');
+                const analyzeBtn = document.getElementById('analyzeBtn');
+
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                uploadIcon.style.display = 'none';
+                uploadText.textContent = file.name;
+                uploadBtn.style.display = 'none';
+                analyzeBtn.style.display = 'inline-flex';
+
+                // 이미지 엘리먼트 저장
+                currentImageElement = new Image();
+                currentImageElement.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 분석 시작 버튼
+        document.getElementById('analyzeBtn').addEventListener('click', async function(e) {
+            e.stopPropagation();
+            await startPhysiognomyAnalysis();
+        });
+
+        // 관상 분석 실행
+        async function startPhysiognomyAnalysis() {
+            const uploadArea = document.getElementById('uploadArea');
+            const loading = document.getElementById('analysisLoading');
+            const result = document.getElementById('physiognomyResult');
+
+            // UI 전환
+            uploadArea.style.display = 'none';
+            loading.style.display = 'block';
+            result.style.display = 'none';
+
+            try {
+                // Face Mesh 초기화
+                const faceMesh = await initializeFaceMesh();
+
+                // 랜드마크 추출
+                const landmarks = await new Promise((resolve, reject) => {
+                    faceMesh.onResults((results) => {
+                        if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+                            resolve(results.multiFaceLandmarks[0]);
+                        } else {
+                            reject(new Error('얼굴을 감지하지 못했습니다.'));
+                        }
+                    });
+
+                    // 이미지 전송
+                    currentImageElement.onload = function() {
+                        faceMesh.send({ image: currentImageElement });
+                    };
+                    if (currentImageElement.complete) {
+                        faceMesh.send({ image: currentImageElement });
+                    }
+                });
+
+                console.log('랜드마크 추출 완료:', landmarks.length, '개');
+
+                // 측정값 계산
+                const measurements = calculateFaceMeasurements(landmarks);
+
+                // 분석 실행
+                const analysis = performPhysiognomyAnalysis(measurements, landmarks);
+
+                // 결과 표시
+                displayPhysiognomyResult(analysis);
+
+                // UI 전환
+                loading.style.display = 'none';
+                result.style.display = 'block';
+
+                // 원본 이미지 참조 제거 (개인정보 보호)
+                currentImageElement = null;
+                document.getElementById('previewImage').src = '';
+
+            } catch (error) {
+                console.error('관상 분석 오류:', error);
+                alert('얼굴 분석 중 오류가 발생했습니다: ' + error.message);
+                loading.style.display = 'none';
+                uploadArea.style.display = 'block';
+            }
+        }
+
+        // 얼굴 측정값 계산
+        function calculateFaceMeasurements(landmarks) {
+            function distance(idx1, idx2) {
+                const p1 = landmarks[idx1];
+                const p2 = landmarks[idx2];
+                return Math.sqrt(
+                    Math.pow(p2.x - p1.x, 2) +
+                    Math.pow(p2.y - p1.y, 2)
+                );
+            }
+
+            const faceHeight = distance(10, 152);
+            const faceWidth = distance(234, 454);
+
+            return {
+                faceHeight: faceHeight,
+                faceWidth: faceWidth,
+                foreheadHeight: distance(10, 9),
+                eyeDistance: distance(133, 362),
+                eyeWidth: distance(33, 133),
+                noseLength: distance(6, 4),
+                noseWidth: distance(48, 278),
+                mouthWidth: distance(61, 291),
+                lipThickness: distance(0, 17),
+                jawWidth: distance(172, 397),
+                chinLength: distance(4, 152),
+                upperThird: distance(10, 9) / faceHeight,
+                middleThird: distance(6, 4) / faceHeight,
+                lowerThird: distance(4, 152) / faceHeight
+            };
+        }
+
+        // 관상 분석 수행
+        function performPhysiognomyAnalysis(measurements, landmarks) {
+            // 얼굴형 분석
+            const ratio = measurements.faceWidth / measurements.faceHeight;
+            let faceShape;
+            if (ratio > 0.85) {
+                faceShape = { type: 'round', korean: '원형', score: 80, meaning: '친화력 좋고 낙천적' };
+            } else if (ratio > 0.75) {
+                faceShape = { type: 'oval', korean: '계란형', score: 85, meaning: '균형 잡힌 성격, 다재다능' };
+            } else if (ratio > 0.65) {
+                faceShape = { type: 'long', korean: '장형', score: 70, meaning: '사려 깊고 품위 있음' };
+            } else {
+                faceShape = { type: 'heart', korean: '역삼각형', score: 75, meaning: '창의적이고 이상적' };
+            }
+
+            // 이마 분석
+            const foreheadRatio = measurements.foreheadHeight / measurements.faceHeight;
+            let forehead;
+            if (foreheadRatio > 0.35) {
+                forehead = { type: 'high', korean: '높은 이마', score: 85, meaning: '지혜롭고 사려 깊음' };
+            } else if (foreheadRatio > 0.28) {
+                forehead = { type: 'medium', korean: '보통 이마', score: 70, meaning: '균형 잡힌 사고력' };
+            } else {
+                forehead = { type: 'low', korean: '낮은 이마', score: 55, meaning: '행동력이 앞서는 실천가' };
+            }
+
+            // 코 분석
+            const noseLengthRatio = measurements.noseLength / measurements.faceHeight;
+            const noseWidthRatio = measurements.noseWidth / measurements.faceWidth;
+            let nose = {
+                type: noseLengthRatio > 0.32 ? 'high' : 'average',
+                korean: noseLengthRatio > 0.32 ? '오똑한 코' : '보통 코',
+                score: noseLengthRatio > 0.32 ? 85 : 70,
+                meaning: noseLengthRatio > 0.32 ? '자존심이 강하고 성취욕 높음' : '균형 잡힌 재물운'
+            };
+
+            // 삼정 분석
+            const threeZones = {
+                upper: {
+                    ratio: measurements.upperThird,
+                    score: measurements.upperThird > 0.36 ? 85 : (measurements.upperThird < 0.28 ? 65 : 75),
+                    interpretation: measurements.upperThird > 0.36 ? '초년운이 강함' : (measurements.upperThird < 0.28 ? '자수성가형' : '균형 잡힌 초년운')
+                },
+                middle: {
+                    ratio: measurements.middleThird,
+                    score: measurements.middleThird > 0.36 ? 85 : (measurements.middleThird < 0.28 ? 65 : 75),
+                    interpretation: measurements.middleThird > 0.36 ? '중년운이 강함' : (measurements.middleThird < 0.28 ? '중년 노력 필요' : '균형 잡힌 중년운')
+                },
+                lower: {
+                    ratio: measurements.lowerThird,
+                    score: measurements.lowerThird > 0.36 ? 85 : (measurements.lowerThird < 0.28 ? 65 : 75),
+                    interpretation: measurements.lowerThird > 0.36 ? '말년운이 강함' : (measurements.lowerThird < 0.28 ? '말년 건강관리 중요' : '균형 잡힌 말년운')
+                }
+            };
+
+            // 12궁 분석 (간략화)
+            const twelvePalaces = {
+                '명궁': { score: 75, meaning: '전체적인 운명' },
+                '재백궁': { score: nose.score, meaning: '재물운' },
+                '형제궁': { score: 72, meaning: '형제/친구운' },
+                '전택궁': { score: 70, meaning: '부동산/가정운' },
+                '남녀궁': { score: 73, meaning: '자녀/이성운' },
+                '노복궁': { score: 71, meaning: '조력자운' },
+                '처첩궁': { score: 74, meaning: '배우자운' },
+                '질액궁': { score: 68, meaning: '건강운' },
+                '천이궁': { score: 72, meaning: '이동/해외운' },
+                '관록궁': { score: forehead.score, meaning: '직업운' },
+                '복덕궁': { score: 76, meaning: '타고난 복' },
+                '부모궁': { score: 74, meaning: '부모/윗사람운' }
+            };
+
+            // 종합 점수
+            const scores = [faceShape.score, forehead.score, nose.score,
+                          threeZones.upper.score, threeZones.middle.score, threeZones.lower.score];
+            const avgScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+
+            let grade, gradeDesc;
+            if (avgScore >= 82) { grade = 'S'; gradeDesc = '매우 좋은 관상입니다.'; }
+            else if (avgScore >= 75) { grade = 'A'; gradeDesc = '좋은 관상입니다.'; }
+            else if (avgScore >= 68) { grade = 'B'; gradeDesc = '균형 잡힌 관상입니다.'; }
+            else if (avgScore >= 60) { grade = 'C'; gradeDesc = '노력형 관상입니다.'; }
+            else { grade = 'D'; gradeDesc = '마음가짐이 중요합니다.'; }
+
+            return {
+                faceShape,
+                forehead,
+                nose,
+                threeZones,
+                twelvePalaces,
+                overallScore: { score: avgScore, grade, gradeDesc },
+                summary: [
+                    `${faceShape.korean}의 얼굴형으로, ${faceShape.meaning}`,
+                    `${forehead.korean}로 ${forehead.meaning}`,
+                    `코가 ${nose.korean}으로 ${nose.meaning}`
+                ],
+                advice: [
+                    threeZones.upper.score < 75 ? '학습과 자기계발에 투자하세요.' : null,
+                    threeZones.middle.score < 75 ? '인맥 관리와 건강에 신경 쓰세요.' : null,
+                    threeZones.lower.score < 75 ? '저축과 건강 관리를 꾸준히 하세요.' : null,
+                    '현재의 장점을 잘 유지하세요.'
+                ].filter(a => a !== null)
+            };
+        }
+
+        // 관상 분석 결과 표시
+        function displayPhysiognomyResult(analysis) {
+            const gradeColors = { 'S': '#ff2d55', 'A': '#ff9500', 'B': '#34c759', 'C': '#007aff', 'D': '#8e8e93' };
+
+            // 종합 점수
+            document.getElementById('physioGrade').textContent = analysis.overallScore.grade;
+            document.getElementById('physioGrade').style.color = gradeColors[analysis.overallScore.grade];
+            document.getElementById('physioScore').textContent = `${analysis.overallScore.score}점`;
+            document.getElementById('physioGradeDesc').textContent = analysis.overallScore.gradeDesc;
+
+            // 주요 특징
+            document.getElementById('faceShapeResult').textContent = analysis.faceShape.korean;
+            document.getElementById('faceShapeMeaning').textContent = analysis.faceShape.meaning;
+            document.getElementById('foreheadResult').textContent = analysis.forehead.korean;
+            document.getElementById('foreheadMeaning').textContent = analysis.forehead.meaning;
+            document.getElementById('noseResult').textContent = analysis.nose.korean;
+            document.getElementById('noseMeaning').textContent = analysis.nose.meaning;
+
+            // 삼정
+            const zones = ['upper', 'middle', 'lower'];
+            zones.forEach(zone => {
+                const card = document.getElementById(`${zone}ThirdCard`);
+                const score = analysis.threeZones[zone].score;
+                const color = score >= 80 ? 'var(--status-good)' : (score >= 70 ? 'var(--apple-blue)' : 'var(--status-warning)');
+                card.style.borderColor = color;
+                document.getElementById(`${zone}ThirdScore`).textContent = `${score}점`;
+                document.getElementById(`${zone}ThirdScore`).style.color = color;
+                document.getElementById(`${zone}ThirdDesc`).textContent = analysis.threeZones[zone].interpretation;
+            });
+
+            // 12궁
+            const palacesGrid = document.getElementById('twelvePalacesGrid');
+            palacesGrid.innerHTML = Object.entries(analysis.twelvePalaces).map(([name, data]) => {
+                const color = data.score >= 75 ? 'var(--status-good)' : (data.score >= 68 ? 'var(--apple-blue)' : 'var(--apple-gray)');
+                return `
+                    <div style="padding: 12px; background: var(--apple-light-gray); border-radius: 8px; text-align: center;">
+                        <p class="caption">${name}</p>
+                        <p style="font-size: 18px; font-weight: 600; color: ${color}; margin-top: 4px;">${data.score}</p>
+                        <p class="caption" style="margin-top: 2px; color: var(--apple-gray);">${data.meaning}</p>
+                    </div>
+                `;
+            }).join('');
+
+            // 종합 해석
+            document.getElementById('physioSummary').innerHTML = analysis.summary.map(s => `<p>${s}</p>`).join('');
+
+            // 조언
+            document.getElementById('physioAdvice').innerHTML = analysis.advice.map(a => `<li>${a}</li>`).join('');
+        }
+
+        // 다시 분석 버튼
+        document.getElementById('resetPhysioBtn').addEventListener('click', function() {
+            document.getElementById('uploadArea').style.display = 'block';
+            document.getElementById('physiognomyResult').style.display = 'none';
+            document.getElementById('previewImage').style.display = 'none';
+            document.getElementById('uploadIcon').style.display = 'block';
+            document.getElementById('uploadText').textContent = '사진을 드래그하거나 클릭하여 업로드';
+            document.getElementById('uploadBtn').style.display = 'inline-flex';
+            document.getElementById('analyzeBtn').style.display = 'none';
+            document.getElementById('photoInput').value = '';
+        });
+
+        // ========== Theme Toggle (Dark Mode) ==========
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = themeToggle.querySelector('.sun-icon');
+        const moonIcon = themeToggle.querySelector('.moon-icon');
+
+        // 저장된 테마 확인 또는 시스템 설정 사용
+        function getPreferredTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) return savedTheme;
+
+            // 시스템 다크 모드 확인
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        // 테마 적용
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+
+            if (theme === 'dark') {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+
+            localStorage.setItem('theme', theme);
+
+            // 차트 다시 렌더링 (다크 모드 적용)
+            if (window.lastSajuResult) {
+                ChartRenderer.renderSajuChart('sajuChartContainer', window.lastSajuResult);
+                ChartRenderer.renderElementChart('elementChartContainer', window.lastSajuResult.elementAnalysis);
+            }
+            if (window.lastAstroResult) {
+                ChartRenderer.renderAstroChart('astroChartContainer', window.lastAstroResult);
+            }
+        }
+
+        // 초기 테마 적용
+        applyTheme(getPreferredTheme());
+
+        // 토글 클릭 이벤트
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+        });
+
+        // 시스템 테마 변경 감지
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            if (!localStorage.getItem('theme')) {
+                applyTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,286 @@
+/* ===== Astro-Synthesis Custom Styles ===== */
+
+/* Body Padding for Fixed Header */
+body {
+    padding-top: 48px;
+}
+
+/* Cosmic Theme (Dark Mode Default) */
+.cosmic-theme {
+    --bg-primary: #0a0a1a;
+    --bg-secondary: #12122a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0b0;
+    --accent-gold: #ffd700;
+}
+
+/* Saju (사주) Card Styles */
+.saju-card {
+    background: linear-gradient(135deg, var(--apple-white) 0%, var(--apple-light-gray) 100%);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-md);
+}
+
+.saju-pillar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm);
+    background: var(--apple-white);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.saju-pillar-header {
+    font-size: var(--font-size-caption);
+    color: var(--apple-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.saju-character {
+    font-size: 32px;
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+}
+
+.saju-element {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: var(--border-radius-sm);
+}
+
+/* 오행 (Five Elements) Colors */
+.saju-character.wood, .saju-element.wood { color: var(--element-wood); }
+.saju-character.fire, .saju-element.fire { color: var(--element-fire); }
+.saju-character.earth, .saju-element.earth { color: var(--element-earth); }
+.saju-character.metal, .saju-element.metal { color: var(--element-metal); }
+.saju-character.water, .saju-element.water { color: var(--element-water); }
+
+.saju-element.wood { background: rgba(52, 199, 89, 0.15); }
+.saju-element.fire { background: rgba(255, 59, 48, 0.15); }
+.saju-element.earth { background: rgba(255, 149, 0, 0.15); }
+.saju-element.metal { background: rgba(142, 142, 147, 0.15); }
+.saju-element.water { background: rgba(0, 122, 255, 0.15); }
+
+/* Astrology Chart Styles */
+.astro-chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.astro-chart-svg {
+    width: 100%;
+    height: auto;
+}
+
+/* Planet Badge */
+.planet-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--apple-light-gray);
+    border-radius: var(--border-radius-sm);
+    font-size: 14px;
+}
+
+.planet-symbol {
+    font-size: 16px;
+}
+
+.planet-degree {
+    color: var(--apple-gray);
+    font-size: 12px;
+}
+
+/* Aspect Line Colors */
+.aspect-conjunction { stroke: var(--apple-blue); }
+.aspect-opposition { stroke: var(--status-bad); }
+.aspect-trine { stroke: var(--status-good); }
+.aspect-square { stroke: var(--status-warning); }
+.aspect-sextile { stroke: var(--element-water); }
+
+/* AHP Score Display */
+.ahp-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-md);
+}
+
+.ahp-score-value {
+    font-size: 48px;
+    font-weight: var(--font-weight-bold);
+    color: var(--apple-blue);
+}
+
+.ahp-score-label {
+    font-size: var(--font-size-caption);
+    color: var(--apple-gray);
+    text-transform: uppercase;
+}
+
+/* Score Bar */
+.score-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--apple-light-gray);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width var(--transition-slow);
+}
+
+.score-bar-fill.good { background: var(--status-good); }
+.score-bar-fill.bad { background: var(--status-bad); }
+.score-bar-fill.neutral { background: var(--apple-blue); }
+
+/* Input Form Styles */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.input-label {
+    font-size: 14px;
+    font-weight: var(--font-weight-medium);
+    color: var(--apple-dark-gray);
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--apple-white);
+    border: 1px solid var(--apple-light-gray);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-body);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input-field:focus {
+    border-color: var(--apple-blue);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2);
+}
+
+.input-field::placeholder {
+    color: var(--apple-gray);
+}
+
+/* Checkbox Custom Style */
+.checkbox-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+    cursor: pointer;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--apple-blue);
+}
+
+/* Result Card */
+.result-card {
+    border-left: 4px solid var(--apple-blue);
+    padding-left: var(--spacing-md);
+}
+
+.result-card.positive {
+    border-left-color: var(--status-good);
+}
+
+.result-card.negative {
+    border-left-color: var(--status-bad);
+}
+
+.result-card.warning {
+    border-left-color: var(--status-warning);
+}
+
+/* Disclaimer */
+.disclaimer {
+    font-size: var(--font-size-caption);
+    color: var(--apple-gray);
+    padding: var(--spacing-sm);
+    background: var(--apple-light-gray);
+    border-radius: var(--border-radius-sm);
+    text-align: center;
+}
+
+/* Loading State */
+.loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: inherit;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--apple-light-gray);
+    border-top-color: var(--apple-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Tab Navigation */
+.tab-nav {
+    display: flex;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+    background: var(--apple-light-gray);
+    border-radius: var(--border-radius-md);
+}
+
+.tab-item {
+    flex: 1;
+    padding: 10px 16px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: var(--font-weight-medium);
+    color: var(--apple-gray);
+    background: transparent;
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.tab-item:hover {
+    color: var(--apple-dark-gray);
+}
+
+.tab-item.active {
+    background: var(--apple-white);
+    color: var(--apple-dark-gray);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .saju-character {
+        font-size: 24px;
+    }
+
+    .ahp-score-value {
+        font-size: 36px;
+    }
+
+    .astro-chart-container {
+        max-width: 100%;
+    }
+}

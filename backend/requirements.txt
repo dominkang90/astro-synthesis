@@ -1,0 +1,35 @@
+# Astro-Synthesis Backend Dependencies
+
+# Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# Astrology Libraries
+pyswisseph==2.10.3.2
+kerykeion==4.5.0
+
+# AI/ML
+openai==1.12.0
+google-generativeai==0.3.2
+
+# Computer Vision (for Physiognomy)
+mediapipe==0.10.9
+opencv-python==4.9.0.80
+numpy==1.26.3
+Pillow==10.2.0
+
+# Data Validation
+pydantic==2.6.0
+pydantic-settings==2.1.0
+
+# Date/Time
+python-dateutil==2.8.2
+pytz==2024.1
+lunardate==0.2.2
+
+# CORS
+starlette==0.35.1
+
+# Environment
+python-dotenv==1.0.1
