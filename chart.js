@@ -321,41 +321,61 @@ const ChartRenderer = (function() {
     function renderSajuChart(containerId, sajuResult) {
         const container = document.getElementById(containerId);
         if (!container) return;
+        if (!sajuResult || !sajuResult.saju) {
+            container.innerHTML = '<p style="text-align:center; color:#8e8e93;">사주 데이터를 불러오는 중...</p>';
+            return;
+        }
 
-        const { width, height } = CONFIG.sajuChart;
+        const config = getConfig();
+        const { width, height, colors } = config.sajuChart;
         const pillars = ['hour', 'day', 'month', 'year'];
         const pillarNames = ['시주', '일주', '월주', '년주'];
         const colWidth = width / 4;
 
-        let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">`;
+        let svg = `<svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">`;
 
         // 배경
-        svg += `<rect width="${width}" height="${height}" fill="#f5f5f7" rx="12"/>`;
+        svg += `<rect width="${width}" height="${height}" fill="${colors.background}" rx="12"/>`;
 
         pillars.forEach((pillar, i) => {
             const x = i * colWidth;
             const pillarData = sajuResult.saju[pillar];
 
+            if (!pillarData) {
+                svg += `<text x="${x + colWidth/2}" y="100" text-anchor="middle" font-size="14" fill="${colors.textSecondary}">-</text>`;
+                return;
+            }
+
             // 주 이름
-            svg += `<text x="${x + colWidth/2}" y="25" text-anchor="middle" font-size="12" fill="#8e8e93">${pillarNames[i]}</text>`;
+            svg += `<text x="${x + colWidth/2}" y="25" text-anchor="middle" font-size="12" fill="${colors.textSecondary}">${pillarNames[i]}</text>`;
 
             // 천간 (상단)
-            const ganColor = WUXING_COLORS[pillarData.cheongan.element];
+            const cheongan = pillarData.cheongan || {};
+            const ganElement = cheongan.element || '土';
+            const ganColor = WUXING_COLORS[ganElement] || '#ff9500';
+            const ganName = cheongan.name || '-';
+            const ganKorean = cheongan.korean || '';
+
             svg += `<rect x="${x + 10}" y="40" width="${colWidth - 20}" height="50" fill="${ganColor}20" stroke="${ganColor}" stroke-width="2" rx="8"/>`;
-            svg += `<text x="${x + colWidth/2}" y="60" text-anchor="middle" font-size="24" font-weight="600" fill="${ganColor}">${pillarData.cheongan.name}</text>`;
-            svg += `<text x="${x + colWidth/2}" y="80" text-anchor="middle" font-size="12" fill="${ganColor}">${pillarData.cheongan.korean}</text>`;
+            svg += `<text x="${x + colWidth/2}" y="60" text-anchor="middle" font-size="24" font-weight="600" fill="${ganColor}">${ganName}</text>`;
+            svg += `<text x="${x + colWidth/2}" y="80" text-anchor="middle" font-size="12" fill="${ganColor}">${ganKorean}</text>`;
 
             // 지지 (하단)
-            const jiColor = WUXING_COLORS[pillarData.jiji.element];
+            const jiji = pillarData.jiji || {};
+            const jiElement = jiji.element || '土';
+            const jiColor = WUXING_COLORS[jiElement] || '#ff9500';
+            const jiName = jiji.name || '-';
+            const jiKorean = jiji.korean || '';
+
             svg += `<rect x="${x + 10}" y="100" width="${colWidth - 20}" height="50" fill="${jiColor}20" stroke="${jiColor}" stroke-width="2" rx="8"/>`;
-            svg += `<text x="${x + colWidth/2}" y="120" text-anchor="middle" font-size="24" font-weight="600" fill="${jiColor}">${pillarData.jiji.name}</text>`;
-            svg += `<text x="${x + colWidth/2}" y="140" text-anchor="middle" font-size="12" fill="${jiColor}">${pillarData.jiji.korean}</text>`;
+            svg += `<text x="${x + colWidth/2}" y="120" text-anchor="middle" font-size="24" font-weight="600" fill="${jiColor}">${jiName}</text>`;
+            svg += `<text x="${x + colWidth/2}" y="140" text-anchor="middle" font-size="12" fill="${jiColor}">${jiKorean}</text>`;
 
             // 십신 표시
-            if (sajuResult.sipsin[pillar]) {
-                const sipsin = sajuResult.sipsin[pillar];
-                svg += `<text x="${x + colWidth/2}" y="170" text-anchor="middle" font-size="10" fill="#8e8e93">${sipsin.cheongan}</text>`;
-                svg += `<text x="${x + colWidth/2}" y="185" text-anchor="middle" font-size="10" fill="#8e8e93">${sipsin.jiji}</text>`;
+            const sipsin = sajuResult.sipsin && sajuResult.sipsin[pillar];
+            if (sipsin) {
+                svg += `<text x="${x + colWidth/2}" y="170" text-anchor="middle" font-size="10" fill="${colors.textSecondary}">${sipsin.cheongan || ''}</text>`;
+                svg += `<text x="${x + colWidth/2}" y="185" text-anchor="middle" font-size="10" fill="${colors.textSecondary}">${sipsin.jiji || ''}</text>`;
             }
         });
 

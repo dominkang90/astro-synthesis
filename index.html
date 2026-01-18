@@ -604,12 +604,20 @@
             }
 
             .bento-grid {
+                display: flex;
+                flex-direction: column;
                 gap: var(--spacing-sm);
                 padding: var(--spacing-sm);
             }
 
             .bento-card {
                 padding: var(--spacing-md);
+                width: 100%;
+            }
+
+            .bento-card.half-width,
+            .bento-card.full-width {
+                grid-column: span 1 !important;
             }
 
             .btn-group {
@@ -619,6 +627,49 @@
 
             .grid-2col {
                 grid-template-columns: 1fr;
+            }
+
+            /* 행운 정보 그리드 모바일 */
+            #luckyInfoSection > div > div {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            /* 해석 탭 버튼 모바일 */
+            #interpSectionNav {
+                gap: 6px !important;
+            }
+
+            .interp-section-btn {
+                padding: 8px 12px !important;
+                font-size: 13px !important;
+            }
+
+            /* 차트 반응형 */
+            .chart-placeholder svg {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --font-size-hero: 28px;
+                --font-size-h1: 24px;
+                --font-size-h2: 22px;
+                --font-size-h3: 18px;
+            }
+
+            .nav-list:last-child {
+                gap: 4px;
+            }
+
+            .nav-list .btn {
+                padding: 6px 10px !important;
+                font-size: 12px !important;
+            }
+
+            #luckyInfoSection > div > div {
+                grid-template-columns: 1fr !important;
             }
         }
     </style>
@@ -659,8 +710,8 @@
                 동서양 역학이 통합된 가장 진보된 인텔리전스.
             </p>
             <div class="btn-group" style="margin-top: 48px; justify-content: center;">
-                <button class="btn btn-primary">무료 분석 시작하기</button>
-                <button class="btn btn-secondary">기술 백서 보기</button>
+                <button class="btn btn-primary" onclick="document.getElementById('analysis').scrollIntoView({behavior: 'smooth'})">무료 분석 시작하기</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})">기능 알아보기</button>
             </div>
         </div>
     </section>
@@ -687,6 +738,14 @@
                                 <div class="form-group">
                                     <label class="form-label">생년월일</label>
                                     <input type="date" id="inputBirthDate" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">역법 선택</label>
+                                    <select id="inputCalendarType" class="form-input">
+                                        <option value="solar">양력 (기본)</option>
+                                        <option value="lunar">음력</option>
+                                        <option value="lunar_leap">음력 (윤달)</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">출생 시간</label>
