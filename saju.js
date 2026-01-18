@@ -2572,9 +2572,9 @@ const SajuCalculator = (function() {
         let narrative = '';
 
         // 12신살 기반 분석
-        const sinsal = sajuResult.sinsal12;
-        const goodCount = sinsal.goodSinsal.length;
-        const badCount = sinsal.badSinsal.length;
+        const sinsal = sajuResult.sinsal12 || {};
+        const goodCount = (sinsal.goodSinsal || []).length;
+        const badCount = (sinsal.badSinsal || []).length;
 
         if (goodCount > badCount) {
             narrative += '전반적으로 **순탄한 인생 흐름**을 타고났습니다. 길신이 많아 어려움이 와도 잘 극복할 수 있는 힘이 있습니다.\n\n';
@@ -2591,22 +2591,24 @@ const SajuCalculator = (function() {
                 currentYear >= d.startYear && currentYear <= d.endYear
             );
 
-            if (currentDaeun) {
-                narrative += `**현재 대운:** ${currentDaeun.pillar.korean}(${currentDaeun.pillar.name}) 대운 (${currentDaeun.startYear}~${currentDaeun.endYear}년)\n`;
-                narrative += `이 시기는 ${currentDaeun.pillar.cheongan.elementKr} 기운이 강해지는 시기입니다.\n\n`;
+            if (currentDaeun && currentDaeun.pillar) {
+                narrative += `**현재 대운:** ${currentDaeun.pillar.korean || ''}(${currentDaeun.pillar.name || ''}) 대운 (${currentDaeun.startYear}~${currentDaeun.endYear}년)\n`;
+                if (currentDaeun.pillar.cheongan) {
+                    narrative += `이 시기는 ${currentDaeun.pillar.cheongan.elementKr || ''} 기운이 강해지는 시기입니다.\n\n`;
+                }
             }
         }
 
         // 합/충 관계 분석
-        const relations = sajuResult.relations;
-        if (relations.samhap.length > 0 || relations.yukhap.length > 0) {
+        const relations = sajuResult.relations || {};
+        if ((relations.samhap || []).length > 0 || (relations.yukhap || []).length > 0) {
             narrative += '사주에 **합(合)**이 있어 주변 사람들과 조화롭게 지내며, 협력을 통해 좋은 결과를 얻을 수 있습니다.\n';
         }
-        if (relations.chung.length > 0) {
+        if ((relations.chung || []).length > 0) {
             narrative += '사주에 **충(沖)**이 있어 변화가 많고 이동수가 있습니다. 변화를 두려워하지 말고 새로운 기회로 삼으세요.\n';
         }
 
-        return narrative;
+        return narrative || '인생의 흐름을 분석 중입니다.';
     }
 
     /**
@@ -2614,7 +2616,7 @@ const SajuCalculator = (function() {
      */
     function generateWealthCareerNarrative(sajuResult) {
         let narrative = '';
-        const sipsin = sajuResult.sipsin;
+        const sipsin = sajuResult.sipsin || {};
 
         // 재성 분석
         let hasJaeSung = false;
@@ -2622,8 +2624,9 @@ const SajuCalculator = (function() {
         let hasSikSang = false;
 
         ['year', 'month', 'hour'].forEach(pillar => {
-            const gan = sipsin[pillar].cheongan;
-            const ji = sipsin[pillar].jiji;
+            if (!sipsin[pillar]) return;
+            const gan = sipsin[pillar].cheongan || '';
+            const ji = sipsin[pillar].jiji || '';
 
             if (['정재', '편재'].includes(gan) || ['정재', '편재'].includes(ji)) hasJaeSung = true;
             if (['정관', '편관'].includes(gan) || ['정관', '편관'].includes(ji)) hasGwanSung = true;
@@ -2653,12 +2656,12 @@ const SajuCalculator = (function() {
             '水': '무역, 물류, 여행, 수산업, 음료, 컨설팅'
         };
 
-        const yongsin = sajuResult.elementAnalysis.yongsin;
+        const yongsin = sajuResult.elementAnalysis?.yongsin || '土';
         if (careerByYongsin[yongsin]) {
             narrative += `\n**추천 직업군:** ${careerByYongsin[yongsin]}`;
         }
 
-        return narrative;
+        return narrative || '재물운과 직업운을 분석 중입니다.';
     }
 
     /**
@@ -2666,14 +2669,14 @@ const SajuCalculator = (function() {
      */
     function generateRelationshipNarrative(sajuResult) {
         let narrative = '';
-        const sipsin = sajuResult.sipsin;
-        const dayGan = sajuResult.saju.day.cheongan;
-        const gender = sajuResult.birthInfo.gender;
+        const sipsin = sajuResult.sipsin || {};
+        const dayGan = sajuResult.saju?.day?.cheongan || {};
+        const gender = sajuResult.birthInfo?.gender || 'male';
 
         // 비겁 분석 (형제/친구)
         let hasBiGyup = false;
         ['year', 'month', 'hour'].forEach(pillar => {
-            if (['비견', '겁재'].includes(sipsin[pillar].cheongan)) hasBiGyup = true;
+            if (sipsin[pillar] && ['비견', '겁재'].includes(sipsin[pillar].cheongan)) hasBiGyup = true;
         });
 
         if (hasBiGyup) {
@@ -2684,7 +2687,7 @@ const SajuCalculator = (function() {
         if (gender === 'male') {
             let hasJaeSungForSpouse = false;
             ['year', 'month', 'hour'].forEach(pillar => {
-                if (['정재', '편재'].includes(sipsin[pillar].cheongan)) hasJaeSungForSpouse = true;
+                if (sipsin[pillar] && ['정재', '편재'].includes(sipsin[pillar].cheongan)) hasJaeSungForSpouse = true;
             });
             if (hasJaeSungForSpouse) {
                 narrative += '남성의 경우 **재성**이 배우자를 나타내며, 사주에 재성이 있어 배우자 인연이 있습니다.\n';
@@ -2692,7 +2695,7 @@ const SajuCalculator = (function() {
         } else {
             let hasGwanSungForSpouse = false;
             ['year', 'month', 'hour'].forEach(pillar => {
-                if (['정관', '편관'].includes(sipsin[pillar].cheongan)) hasGwanSungForSpouse = true;
+                if (sipsin[pillar] && ['정관', '편관'].includes(sipsin[pillar].cheongan)) hasGwanSungForSpouse = true;
             });
             if (hasGwanSungForSpouse) {
                 narrative += '여성의 경우 **관성**이 배우자를 나타내며, 사주에 관성이 있어 배우자 인연이 있습니다.\n';
@@ -2702,7 +2705,7 @@ const SajuCalculator = (function() {
         // 인성 분석 (부모/스승)
         let hasInSung = false;
         ['year', 'month', 'hour'].forEach(pillar => {
-            if (['정인', '편인'].includes(sipsin[pillar].cheongan)) hasInSung = true;
+            if (sipsin[pillar] && ['정인', '편인'].includes(sipsin[pillar].cheongan)) hasInSung = true;
         });
 
         if (hasInSung) {
@@ -2710,8 +2713,8 @@ const SajuCalculator = (function() {
         }
 
         // 관계 조언
-        const relations = sajuResult.relations;
-        if (relations.yukhap.length > 0) {
+        const relations = sajuResult.relations || {};
+        if ((relations.yukhap || []).length > 0) {
             narrative += '\n육합이 있어 **이성 인연**이 좋고 사람들과 잘 어울립니다.';
         }
 
@@ -2722,8 +2725,8 @@ const SajuCalculator = (function() {
      * 건강운 내러티브
      */
     function generateHealthNarrative(sajuResult) {
-        const elementAnalysis = sajuResult.elementAnalysis;
-        const weakest = elementAnalysis.weakest;
+        const elementAnalysis = sajuResult.elementAnalysis || {};
+        const weakest = elementAnalysis.weakest || {};
 
         const healthByElement = {
             '木': { organs: '간, 담, 눈, 근육', advice: '눈의 피로를 풀고 간 건강에 신경 쓰세요. 녹색 채소를 많이 섭취하세요.' },
@@ -2743,7 +2746,11 @@ const SajuCalculator = (function() {
         }
 
         // 균형도 기반 조언
-        const values = Object.values(elementAnalysis.distribution);
+        const distribution = elementAnalysis.distribution || {};
+        const values = Object.values(distribution);
+        if (values.length === 0) {
+            return narrative || '건강 정보를 분석 중입니다.';
+        }
         const avg = values.reduce((a, b) => a + b, 0) / 5;
         const variance = values.reduce((sum, val) => sum + Math.pow(val - avg, 2), 0) / 5;
 
@@ -2761,21 +2768,22 @@ const SajuCalculator = (function() {
      */
     function generateYearlyNarrative(sajuResult) {
         const fortune = sajuResult.yearlyFortune;
-        if (!fortune) return '올해 운세 정보를 계산 중입니다.';
+        if (!fortune || !fortune.pillar) return '올해 운세 정보를 계산 중입니다.';
 
-        let narrative = `**${fortune.year}년은 ${fortune.pillar.korean}(${fortune.pillar.name})년**입니다.\n\n`;
+        let narrative = `**${fortune.year}년은 ${fortune.pillar.korean || ''}(${fortune.pillar.name || ''})년**입니다.\n\n`;
 
-        narrative += `올해의 십신: 천간 **${fortune.sipsin.cheongan}**, 지지 **${fortune.sipsin.jiji}**\n\n`;
+        const sipsin = fortune.sipsin || {};
+        narrative += `올해의 십신: 천간 **${sipsin.cheongan || '-'}**, 지지 **${sipsin.jiji || '-'}**\n\n`;
 
         // 십신 해석
-        if (SIPSIN_INTERPRETATION[fortune.sipsin.cheongan]) {
-            narrative += SIPSIN_INTERPRETATION[fortune.sipsin.cheongan].influence + '\n\n';
+        if (sipsin.cheongan && SIPSIN_INTERPRETATION[sipsin.cheongan]) {
+            narrative += SIPSIN_INTERPRETATION[sipsin.cheongan].influence + '\n\n';
         }
 
         // 신살 해석
         if (fortune.sinsal) {
             const sinsalGood = fortune.sinsal.good;
-            narrative += `12운성: **${fortune.sinsal.name}** - ${fortune.sinsal.desc}\n`;
+            narrative += `12운성: **${fortune.sinsal.name || ''}** - ${fortune.sinsal.desc || ''}\n`;
             if (sinsalGood) {
                 narrative += '→ 긍정적인 기운이 함께합니다.\n';
             } else {
@@ -2795,8 +2803,10 @@ const SajuCalculator = (function() {
      * 종합 조언 내러티브
      */
     function generateOverallAdviceNarrative(sajuResult) {
-        const yongsin = sajuResult.elementAnalysis.yongsin;
-        const dayMasterInterp = DAY_MASTER_INTERPRETATION[sajuResult.saju.day.cheongan.name] || {};
+        const elementAnalysis = sajuResult.elementAnalysis || {};
+        const yongsin = elementAnalysis.yongsin || '土';
+        const dayGanName = sajuResult.saju?.day?.cheongan?.name || '';
+        const dayMasterInterp = DAY_MASTER_INTERPRETATION[dayGanName] || {};
 
         let narrative = '';
 
@@ -2872,15 +2882,19 @@ const SajuCalculator = (function() {
      * 한 문장 요약
      */
     function generateOneSentenceSummary(sajuResult) {
-        const dayGan = sajuResult.saju.day.cheongan;
-        const score = sajuResult.overallScore;
-        const yongsin = sajuResult.elementAnalysis.yongsin;
+        const dayGan = sajuResult.saju?.day?.cheongan || {};
+        const score = sajuResult.overallScore || { grade: '-', score: 0 };
+        const yongsin = sajuResult.elementAnalysis?.yongsin || '土';
 
         const elementChar = {
             '木': '성장하는', '火': '열정적인', '土': '안정적인', '金': '결단력 있는', '水': '지혜로운'
         };
 
-        return `${elementChar[dayGan.element]} ${dayGan.elementKr} 기운의 ${dayGan.korean}일간으로, ` +
+        const elementKr = dayGan.elementKr || '오행';
+        const korean = dayGan.korean || '일간';
+        const element = dayGan.element || '土';
+
+        return `${elementChar[element] || '안정적인'} ${elementKr} 기운의 ${korean}일간으로, ` +
                `${yongsin} 오행을 보충하면 ${score.grade}등급(${score.score}점)의 운을 더욱 발휘할 수 있습니다.`;
     }
 
