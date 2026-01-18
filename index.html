@@ -1109,6 +1109,508 @@
                     }
                 </style>
 
+                <!-- ===== 종합 사주 해석 카드 (AI 스타일) ===== -->
+                <div class="bento-card full-width" id="fullInterpretationCard" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                        <div>
+                            <span class="caption">AI NARRATIVE INTERPRETATION</span>
+                            <h3 class="h3" style="margin-top: 8px;">📜 종합 사주 해석</h3>
+                        </div>
+                        <div id="interpretationSummaryBadge" style="
+                            padding: 12px 20px;
+                            background: linear-gradient(135deg, var(--apple-blue), #5856d6);
+                            color: white;
+                            border-radius: 12px;
+                            font-size: 14px;
+                            font-weight: 600;
+                        ">
+                            -
+                        </div>
+                    </div>
+
+                    <!-- 한 문장 요약 -->
+                    <div id="oneSentenceSummary" style="
+                        margin-top: 20px;
+                        padding: 20px;
+                        background: linear-gradient(135deg, rgba(0,113,227,0.1), rgba(88,86,214,0.1));
+                        border-radius: var(--border-radius-md);
+                        border-left: 4px solid var(--apple-blue);
+                    ">
+                        <p class="body-text" style="font-size: 16px; line-height: 1.6; font-weight: 500;">-</p>
+                    </div>
+
+                    <!-- 섹션 탭 네비게이션 -->
+                    <div id="interpSectionNav" style="
+                        display: flex;
+                        gap: 8px;
+                        margin-top: 24px;
+                        flex-wrap: wrap;
+                        justify-content: center;
+                        padding-bottom: 16px;
+                        border-bottom: 1px solid var(--border-color);
+                    ">
+                        <button class="interp-section-btn active" data-section="personality" style="
+                            padding: 10px 16px;
+                            border: 2px solid var(--apple-blue);
+                            border-radius: 25px;
+                            background: var(--apple-blue);
+                            color: white;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            font-weight: 500;
+                        ">🌟 성격</button>
+                        <button class="interp-section-btn" data-section="lifeflow" style="
+                            padding: 10px 16px;
+                            border: 2px solid var(--border-color);
+                            border-radius: 25px;
+                            background: transparent;
+                            color: var(--text-primary);
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            font-weight: 500;
+                        ">🌊 인생</button>
+                        <button class="interp-section-btn" data-section="wealth" style="
+                            padding: 10px 16px;
+                            border: 2px solid var(--border-color);
+                            border-radius: 25px;
+                            background: transparent;
+                            color: var(--text-primary);
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            font-weight: 500;
+                        ">💰 재물</button>
+                        <button class="interp-section-btn" data-section="relationship" style="
+                            padding: 10px 16px;
+                            border: 2px solid var(--border-color);
+                            border-radius: 25px;
+                            background: transparent;
+                            color: var(--text-primary);
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            font-weight: 500;
+                        ">💕 관계</button>
+                        <button class="interp-section-btn" data-section="health" style="
+                            padding: 10px 16px;
+                            border: 2px solid var(--border-color);
+                            border-radius: 25px;
+                            background: transparent;
+                            color: var(--text-primary);
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            font-weight: 500;
+                        ">💪 건강</button>
+                        <button class="interp-section-btn" data-section="yearly" style="
+                            padding: 10px 16px;
+                            border: 2px solid var(--border-color);
+                            border-radius: 25px;
+                            background: transparent;
+                            color: var(--text-primary);
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            font-weight: 500;
+                        ">📅 올해</button>
+                        <button class="interp-section-btn" data-section="advice" style="
+                            padding: 10px 16px;
+                            border: 2px solid var(--border-color);
+                            border-radius: 25px;
+                            background: transparent;
+                            color: var(--text-primary);
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            font-weight: 500;
+                        ">✨ 조언</button>
+                    </div>
+
+                    <!-- 해석 내용 영역 -->
+                    <div id="interpSectionContent" style="margin-top: 24px;">
+                        <!-- 동적으로 내용이 채워짐 -->
+                    </div>
+
+                    <!-- 행운 정보 -->
+                    <div id="luckyInfoSection" style="
+                        margin-top: 24px;
+                        padding: 20px;
+                        background: var(--apple-light-gray);
+                        border-radius: var(--border-radius-md);
+                    ">
+                        <h4 class="h4" style="margin-bottom: 16px; text-align: center;">🍀 행운 정보</h4>
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; text-align: center;">
+                            <div style="padding: 12px; background: var(--bg-card); border-radius: 8px;">
+                                <p class="caption">행운의 색상</p>
+                                <p id="luckyColorsInfo" class="body-text" style="margin-top: 8px; font-weight: 600;">-</p>
+                            </div>
+                            <div style="padding: 12px; background: var(--bg-card); border-radius: 8px;">
+                                <p class="caption">행운의 숫자</p>
+                                <p id="luckyNumbersInfo" class="body-text" style="margin-top: 8px; font-weight: 600;">-</p>
+                            </div>
+                            <div style="padding: 12px; background: var(--bg-card); border-radius: 8px;">
+                                <p class="caption">행운의 방향</p>
+                                <p id="luckyDirectionInfo" class="body-text" style="margin-top: 8px; font-weight: 600;">-</p>
+                            </div>
+                            <div style="padding: 12px; background: var(--bg-card); border-radius: 8px;">
+                                <p class="caption">행운의 물건</p>
+                                <p id="luckyElementInfo" class="body-text" style="margin-top: 8px; font-weight: 600;">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 면책 조항 -->
+                    <p class="caption" style="margin-top: 20px; text-align: center; color: var(--apple-gray);">
+                        ※ 본 해석은 전통 역학 이론에 기반한 참고 자료이며, 의학적·법적 조언을 대체하지 않습니다.
+                    </p>
+                </div>
+
+                <!-- ===== Phase 1: 상세 해석 카드 ===== -->
+                <div class="bento-card full-width" id="interpretationCard" style="display: none;">
+                    <span class="caption">DETAILED INTERPRETATION</span>
+                    <h3 class="h3" style="margin-top: 12px;">사주 풀이</h3>
+
+                    <!-- 탭 버튼 -->
+                    <div style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;">
+                        <button class="interp-tab active" data-tab="personality" style="padding: 8px 16px; border: 1px solid var(--apple-blue); border-radius: 20px; background: var(--apple-blue); color: white; cursor: pointer; transition: all 0.2s;">성격</button>
+                        <button class="interp-tab" data-tab="fortune" style="padding: 8px 16px; border: 1px solid var(--apple-gray); border-radius: 20px; background: transparent; color: var(--apple-dark-gray); cursor: pointer; transition: all 0.2s;">운세</button>
+                        <button class="interp-tab" data-tab="relations" style="padding: 8px 16px; border: 1px solid var(--apple-gray); border-radius: 20px; background: transparent; color: var(--apple-dark-gray); cursor: pointer; transition: all 0.2s;">관계</button>
+                        <button class="interp-tab" data-tab="advice" style="padding: 8px 16px; border: 1px solid var(--apple-gray); border-radius: 20px; background: transparent; color: var(--apple-dark-gray); cursor: pointer; transition: all 0.2s;">조언</button>
+                    </div>
+
+                    <!-- 탭 내용 -->
+                    <div id="interpTabContent" style="margin-top: 20px;">
+                        <!-- 성격 탭 -->
+                        <div class="interp-panel active" data-panel="personality">
+                            <div id="personalityContent" style="background: var(--apple-light-gray); padding: 20px; border-radius: var(--border-radius-md);">
+                                <h4 id="dayMasterTitle" class="h4" style="color: var(--apple-blue);">-</h4>
+                                <p id="dayMasterPersonality" class="body-text" style="margin-top: 12px; line-height: 1.8;">-</p>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+                                    <div>
+                                        <p class="caption" style="color: var(--status-good);">강점</p>
+                                        <ul id="dayMasterStrengths" style="list-style: disc; padding-left: 20px; margin-top: 8px;"></ul>
+                                    </div>
+                                    <div>
+                                        <p class="caption" style="color: var(--status-bad);">약점</p>
+                                        <ul id="dayMasterWeaknesses" style="list-style: disc; padding-left: 20px; margin-top: 8px;"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 운세 탭 -->
+                        <div class="interp-panel" data-panel="fortune" style="display: none;">
+                            <div id="sipsinContent" style="display: grid; gap: 12px;">
+                                <!-- 동적으로 십신 분석 내용 추가 -->
+                            </div>
+                        </div>
+
+                        <!-- 관계 탭 -->
+                        <div class="interp-panel" data-panel="relations" style="display: none;">
+                            <div id="relationsContent" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div>
+                                    <h4 class="h4" style="color: var(--status-good); margin-bottom: 12px;">좋은 관계</h4>
+                                    <div id="goodRelationsDetail"></div>
+                                </div>
+                                <div>
+                                    <h4 class="h4" style="color: var(--status-bad); margin-bottom: 12px;">주의 관계</h4>
+                                    <div id="badRelationsDetail"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 조언 탭 -->
+                        <div class="interp-panel" data-panel="advice" style="display: none;">
+                            <div id="adviceContent">
+                                <div id="adviceList" style="margin-bottom: 20px;"></div>
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                                    <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                        <p class="caption">행운의 색상</p>
+                                        <p id="luckyColors" class="body-text" style="margin-top: 8px; font-weight: 600;">-</p>
+                                    </div>
+                                    <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                        <p class="caption">행운의 숫자</p>
+                                        <p id="luckyNumbers" class="body-text" style="margin-top: 8px; font-weight: 600;">-</p>
+                                    </div>
+                                    <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                        <p class="caption">행운의 방향</p>
+                                        <p id="luckyDirection" class="body-text" style="margin-top: 8px; font-weight: 600;">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== Phase 2: 테마별 운세 카드 ===== -->
+                <div class="bento-card full-width" id="themedFortuneCard" style="display: none;">
+                    <span class="caption">THEMED FORTUNE</span>
+                    <h3 class="h3" style="margin-top: 12px;">테마별 운세</h3>
+
+                    <!-- 테마 버튼 -->
+                    <div style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; justify-content: center;">
+                        <button class="theme-btn active" data-theme="love" style="padding: 12px 20px; border: 2px solid var(--apple-blue); border-radius: 12px; background: var(--apple-blue); color: white; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+                            <span>❤️</span> 연애운
+                        </button>
+                        <button class="theme-btn" data-theme="wealth" style="padding: 12px 20px; border: 2px solid var(--apple-gray); border-radius: 12px; background: transparent; color: var(--apple-dark-gray); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+                            <span>💰</span> 재물운
+                        </button>
+                        <button class="theme-btn" data-theme="career" style="padding: 12px 20px; border: 2px solid var(--apple-gray); border-radius: 12px; background: transparent; color: var(--apple-dark-gray); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+                            <span>💼</span> 사업운
+                        </button>
+                        <button class="theme-btn" data-theme="health" style="padding: 12px 20px; border: 2px solid var(--apple-gray); border-radius: 12px; background: transparent; color: var(--apple-dark-gray); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+                            <span>💪</span> 건강운
+                        </button>
+                        <button class="theme-btn" data-theme="study" style="padding: 12px 20px; border: 2px solid var(--apple-gray); border-radius: 12px; background: transparent; color: var(--apple-dark-gray); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+                            <span>📚</span> 학업운
+                        </button>
+                    </div>
+
+                    <!-- 테마별 결과 -->
+                    <div id="themedFortuneResult" style="margin-top: 24px;">
+                        <div style="text-align: center; padding: 24px; background: var(--apple-light-gray); border-radius: var(--border-radius-md);">
+                            <p id="themedFortuneIcon" style="font-size: 48px;">❤️</p>
+                            <h4 id="themedFortuneName" class="h3" style="margin-top: 8px;">연애운</h4>
+                            <div id="themedFortuneGrade" style="font-size: 64px; font-weight: 700; color: var(--apple-blue); margin-top: 8px;">-</div>
+                            <p id="themedFortuneScore" class="body-text" style="font-weight: 600;">-- 점</p>
+                            <p id="themedFortuneGradeDesc" class="caption" style="margin-top: 4px;">-</p>
+                        </div>
+                        <div style="margin-top: 20px; padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm);">
+                            <h5 class="h4" style="margin-bottom: 8px;">해석</h5>
+                            <p id="themedFortuneInterp" class="body-text" style="line-height: 1.8;">-</p>
+                        </div>
+                        <div style="margin-top: 16px;">
+                            <h5 class="h4" style="margin-bottom: 8px;">조언</h5>
+                            <ul id="themedFortuneAdvice" style="list-style: disc; padding-left: 20px;">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== Phase 3: 기간별 운세 카드 ===== -->
+                <div class="bento-card full-width" id="periodFortuneCard" style="display: none;">
+                    <span class="caption">PERIOD FORTUNE</span>
+                    <h3 class="h3" style="margin-top: 12px;">기간별 운세</h3>
+
+                    <!-- 기간 탭 -->
+                    <div style="display: flex; gap: 8px; margin-top: 16px;">
+                        <button class="period-tab active" data-period="daily" style="flex: 1; padding: 12px; border: 2px solid var(--apple-blue); border-radius: 8px; background: var(--apple-blue); color: white; cursor: pointer; transition: all 0.2s;">오늘</button>
+                        <button class="period-tab" data-period="monthly" style="flex: 1; padding: 12px; border: 2px solid var(--apple-gray); border-radius: 8px; background: transparent; color: var(--apple-dark-gray); cursor: pointer; transition: all 0.2s;">이번 달</button>
+                        <button class="period-tab" data-period="yearly" style="flex: 1; padding: 12px; border: 2px solid var(--apple-gray); border-radius: 8px; background: transparent; color: var(--apple-dark-gray); cursor: pointer; transition: all 0.2s;">올해</button>
+                    </div>
+
+                    <!-- 날짜 선택기 -->
+                    <div id="dateSelector" style="margin-top: 16px; display: flex; gap: 12px; align-items: center; justify-content: center;">
+                        <input type="date" id="fortuneDate" class="form-input" style="width: auto;">
+                        <button id="checkFortuneBtn" class="btn btn-secondary" style="padding: 8px 16px;">운세 확인</button>
+                    </div>
+
+                    <!-- 일일 운세 결과 -->
+                    <div id="dailyFortuneResult" style="margin-top: 24px;">
+                        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+                            <!-- 점수/등급 -->
+                            <div style="text-align: center; padding: 24px; background: var(--apple-light-gray); border-radius: var(--border-radius-md);">
+                                <p id="dailyFortuneDate" class="caption">-</p>
+                                <p id="dailyFortunePillar" class="h3" style="margin-top: 8px;">-</p>
+                                <div id="dailyFortuneGrade" style="font-size: 48px; font-weight: 700; color: var(--apple-blue); margin-top: 8px;">-</div>
+                                <p id="dailyFortuneScore" class="body-text">-- 점</p>
+                            </div>
+                            <!-- 상세 정보 -->
+                            <div>
+                                <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); margin-bottom: 12px;">
+                                    <p class="caption">오늘의 해석</p>
+                                    <p id="dailyFortuneInterp" class="body-text" style="margin-top: 8px; line-height: 1.6;">-</p>
+                                </div>
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                                    <div style="padding: 12px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                        <p class="caption">행운의 색상</p>
+                                        <div id="dailyLuckyColor" style="width: 24px; height: 24px; border-radius: 50%; margin: 8px auto; border: 1px solid #ccc;"></div>
+                                        <p id="dailyLuckyColorName" class="caption">-</p>
+                                    </div>
+                                    <div style="padding: 12px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                        <p class="caption">행운의 숫자</p>
+                                        <p id="dailyLuckyNumber" class="h4" style="margin-top: 8px;">-</p>
+                                    </div>
+                                    <div style="padding: 12px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                        <p class="caption">행운의 시간</p>
+                                        <p id="dailyLuckyHour" class="caption" style="margin-top: 8px;">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 월간 운세 결과 -->
+                    <div id="monthlyFortuneResult" style="margin-top: 24px; display: none;">
+                        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+                            <div style="text-align: center; padding: 24px; background: var(--apple-light-gray); border-radius: var(--border-radius-md);">
+                                <p id="monthlyFortuneName" class="caption">-</p>
+                                <p id="monthlyFortunePillar" class="h3" style="margin-top: 8px;">-</p>
+                                <div id="monthlyFortuneGrade" style="font-size: 48px; font-weight: 700; color: var(--apple-blue); margin-top: 8px;">-</div>
+                                <p id="monthlyFortuneScore" class="body-text">-- 점</p>
+                            </div>
+                            <div>
+                                <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); margin-bottom: 12px;">
+                                    <p class="caption">이번 달 해석</p>
+                                    <p id="monthlyFortuneInterp" class="body-text" style="margin-top: 8px; line-height: 1.6;">-</p>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                    <div style="padding: 12px; background: rgba(52,199,89,0.1); border-radius: var(--border-radius-sm);">
+                                        <p class="caption" style="color: var(--status-good);">좋은 날</p>
+                                        <div id="monthlyGoodDates" style="margin-top: 8px;"></div>
+                                    </div>
+                                    <div style="padding: 12px; background: rgba(255,59,48,0.1); border-radius: var(--border-radius-sm);">
+                                        <p class="caption" style="color: var(--status-bad);">주의할 날</p>
+                                        <div id="monthlyCautionDates" style="margin-top: 8px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 연간 운세는 기존 fiveYearFortune 활용 안내 -->
+                    <div id="yearlyFortuneResult" style="margin-top: 24px; display: none;">
+                        <p class="body-text" style="text-align: center; color: var(--apple-gray);">
+                            올해의 운세는 위의 "향후 5년 운세" 카드에서 확인하실 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ===== Phase 4: 궁합 분석 카드 ===== -->
+                <div class="bento-card full-width" id="compatibilityCard">
+                    <span class="caption">COMPATIBILITY ANALYSIS</span>
+                    <h3 class="h3" style="margin-top: 12px;">궁합 분석</h3>
+                    <p class="body-text" style="margin-top: 8px; color: var(--apple-gray);">두 사람의 사주를 비교하여 종합 궁합을 분석합니다.</p>
+
+                    <!-- 입력 폼 -->
+                    <div id="compatibilityForm" style="margin-top: 20px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <!-- 본인 정보 -->
+                            <div style="padding: 20px; background: var(--apple-light-gray); border-radius: var(--border-radius-md);">
+                                <h4 class="h4" style="text-align: center; margin-bottom: 16px;">본인</h4>
+                                <div class="form-group">
+                                    <label class="form-label">생년월일</label>
+                                    <input type="date" id="person1BirthDate" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">출생 시간</label>
+                                    <input type="time" id="person1BirthTime" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">성별</label>
+                                    <select id="person1Gender" class="form-input">
+                                        <option value="">선택</option>
+                                        <option value="male">남성</option>
+                                        <option value="female">여성</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 상대방 정보 -->
+                            <div style="padding: 20px; background: var(--apple-light-gray); border-radius: var(--border-radius-md);">
+                                <h4 class="h4" style="text-align: center; margin-bottom: 16px;">상대방</h4>
+                                <div class="form-group">
+                                    <label class="form-label">생년월일</label>
+                                    <input type="date" id="person2BirthDate" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">출생 시간</label>
+                                    <input type="time" id="person2BirthTime" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">성별</label>
+                                    <select id="person2Gender" class="form-input">
+                                        <option value="">선택</option>
+                                        <option value="male">남성</option>
+                                        <option value="female">여성</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 24px;">
+                            <button id="analyzeCompatibilityBtn" class="btn btn-primary" style="padding: 16px 48px;">궁합 분석</button>
+                        </div>
+                    </div>
+
+                    <!-- 궁합 결과 -->
+                    <div id="compatibilityResult" style="display: none; margin-top: 24px;">
+                        <!-- 종합 점수 -->
+                        <div style="text-align: center; padding: 32px; background: linear-gradient(135deg, rgba(0,113,227,0.1), rgba(52,199,89,0.1)); border-radius: var(--border-radius-md); margin-bottom: 24px;">
+                            <span class="caption">종합 궁합</span>
+                            <div id="compatibilityGrade" style="font-size: 80px; font-weight: 700; color: var(--apple-blue); margin-top: 8px;">-</div>
+                            <p id="compatibilityScore" style="font-size: 24px; font-weight: 600;">-- 점</p>
+                            <p id="compatibilityGradeDesc" class="body-text" style="margin-top: 8px; color: var(--apple-gray);">-</p>
+                        </div>
+
+                        <!-- 항목별 점수 -->
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;">
+                            <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                <p class="caption">일주 궁합</p>
+                                <p id="iljuScore" class="h4" style="margin-top: 8px; color: var(--apple-blue);">-</p>
+                                <p class="caption" style="color: var(--apple-gray);">40%</p>
+                            </div>
+                            <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                <p class="caption">지지 궁합</p>
+                                <p id="jijiScore" class="h4" style="margin-top: 8px; color: var(--apple-blue);">-</p>
+                                <p class="caption" style="color: var(--apple-gray);">30%</p>
+                            </div>
+                            <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                <p class="caption">오행 보완</p>
+                                <p id="elementScore" class="h4" style="margin-top: 8px; color: var(--apple-blue);">-</p>
+                                <p class="caption" style="color: var(--apple-gray);">20%</p>
+                            </div>
+                            <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                <p class="caption">십신 궁합</p>
+                                <p id="sipsinScore" class="h4" style="margin-top: 8px; color: var(--apple-blue);">-</p>
+                                <p class="caption" style="color: var(--apple-gray);">10%</p>
+                            </div>
+                        </div>
+
+                        <!-- 영역별 궁합 -->
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;">
+                            <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                <p class="caption">성격</p>
+                                <p id="personalityCompat" class="h4" style="margin-top: 8px;">-</p>
+                            </div>
+                            <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                <p class="caption">재물</p>
+                                <p id="financialCompat" class="h4" style="margin-top: 8px;">-</p>
+                            </div>
+                            <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                <p class="caption">가정</p>
+                                <p id="familyCompat" class="h4" style="margin-top: 8px;">-</p>
+                            </div>
+                            <div style="padding: 16px; background: var(--apple-light-gray); border-radius: var(--border-radius-sm); text-align: center;">
+                                <p class="caption">소통</p>
+                                <p id="communicationCompat" class="h4" style="margin-top: 8px;">-</p>
+                            </div>
+                        </div>
+
+                        <!-- 좋은 점 / 주의 점 -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                            <div style="padding: 16px; background: rgba(52,199,89,0.1); border-radius: var(--border-radius-sm);">
+                                <h4 class="h4" style="color: var(--status-good); margin-bottom: 12px;">좋은 점</h4>
+                                <ul id="compatGoodPoints" style="list-style: disc; padding-left: 20px;"></ul>
+                            </div>
+                            <div style="padding: 16px; background: rgba(255,59,48,0.1); border-radius: var(--border-radius-sm);">
+                                <h4 class="h4" style="color: var(--status-bad); margin-bottom: 12px;">주의할 점</h4>
+                                <ul id="compatCautionPoints" style="list-style: disc; padding-left: 20px;"></ul>
+                            </div>
+                        </div>
+
+                        <!-- 종합 해석 및 조언 -->
+                        <div style="padding: 24px; background: var(--apple-light-gray); border-radius: var(--border-radius-md);">
+                            <h4 class="h4" style="margin-bottom: 12px;">종합 해석</h4>
+                            <p id="compatInterpretation" class="body-text" style="line-height: 1.8;">-</p>
+                            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e5e5ea;">
+                                <h5 style="font-weight: 600; margin-bottom: 8px;">조언</h5>
+                                <ul id="compatAdvice" style="list-style: disc; padding-left: 20px;"></ul>
+                            </div>
+                        </div>
+
+                        <!-- 다시 분석 버튼 -->
+                        <div style="text-align: center; margin-top: 24px;">
+                            <button id="resetCompatibilityBtn" class="btn btn-secondary">다시 분석</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -1280,8 +1782,94 @@
             ChartRenderer.renderSajuChart('sajuChartContainer', result);
             ChartRenderer.renderElementChart('elementChartContainer', result.elementAnalysis);
 
+            // 종합 해석 생성 및 표시
+            const fullInterpretation = SajuCalculator.generateFullInterpretation(result);
+            displayFullInterpretation(fullInterpretation);
+            document.getElementById('fullInterpretationCard').style.display = 'block';
+
             // 결과 섹션으로 스크롤
             document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ========== 종합 해석 표시 함수 ==========
+        let currentInterpretation = null;
+
+        function displayFullInterpretation(interpretation) {
+            currentInterpretation = interpretation;
+
+            // 제목 배지
+            document.getElementById('interpretationSummaryBadge').textContent = interpretation.title;
+
+            // 한 문장 요약
+            document.querySelector('#oneSentenceSummary p').textContent = interpretation.summary;
+
+            // 행운 정보
+            if (interpretation.luckyInfo) {
+                document.getElementById('luckyColorsInfo').textContent = interpretation.luckyInfo.colors.join(', ');
+                document.getElementById('luckyNumbersInfo').textContent = interpretation.luckyInfo.numbers.join(', ');
+                document.getElementById('luckyDirectionInfo').textContent = interpretation.luckyInfo.direction;
+                document.getElementById('luckyElementInfo').textContent = interpretation.luckyInfo.element;
+            }
+
+            // 첫 번째 섹션 표시 (성격)
+            showInterpretationSection('personality');
+
+            // 탭 버튼 이벤트 리스너 설정
+            setupInterpretationTabs();
+        }
+
+        function showInterpretationSection(sectionId) {
+            if (!currentInterpretation) return;
+
+            const section = currentInterpretation.sections.find(s => s.id === sectionId);
+            if (!section) return;
+
+            const container = document.getElementById('interpSectionContent');
+
+            // 마크다운 스타일 변환 (간단한 버전)
+            let htmlContent = section.content
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '</p><p style="margin-top: 12px;">')
+                .replace(/\n•/g, '</p><p style="margin-top: 8px;">•')
+                .replace(/\n→/g, '<br>→')
+                .replace(/\n⚠️/g, '<br><span style="color: var(--status-warning);">⚠️</span>')
+                .replace(/\n💡/g, '<br>💡');
+
+            container.innerHTML = `
+                <div style="
+                    padding: 24px;
+                    background: var(--apple-light-gray);
+                    border-radius: var(--border-radius-md);
+                ">
+                    <h4 class="h4" style="margin-bottom: 16px; color: var(--apple-blue);">
+                        ${section.title}
+                    </h4>
+                    <div class="body-text" style="line-height: 1.9; color: var(--text-primary);">
+                        <p>${htmlContent}</p>
+                    </div>
+                </div>
+            `;
+
+            // 활성 탭 업데이트
+            document.querySelectorAll('.interp-section-btn').forEach(btn => {
+                if (btn.dataset.section === sectionId) {
+                    btn.style.background = 'var(--apple-blue)';
+                    btn.style.borderColor = 'var(--apple-blue)';
+                    btn.style.color = 'white';
+                } else {
+                    btn.style.background = 'transparent';
+                    btn.style.borderColor = 'var(--border-color)';
+                    btn.style.color = 'var(--text-primary)';
+                }
+            });
+        }
+
+        function setupInterpretationTabs() {
+            document.querySelectorAll('.interp-section-btn').forEach(btn => {
+                btn.onclick = function() {
+                    showInterpretationSection(this.dataset.section);
+                };
+            });
         }
 
         // 종합 점수 표시 함수
